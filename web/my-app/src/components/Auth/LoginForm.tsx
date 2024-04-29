@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { auth } from '../../config/firebaseConfig';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const auth = getAuth();
   
   const handleSignIn = async (email: string, password: string) => {
     try {

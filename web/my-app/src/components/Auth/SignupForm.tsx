@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { auth } from '../../config/firebaseConfig';
+import { fireAuth } from '../../config/firebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 
-const SignUpForm: React.FC = () => {
+const SignupForm: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
   const handleSignUp = async (email: string, password: string) => {
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(fireAuth, email, password);
       console.log(userCredential.user);
     } catch (error: any) {
       console.error(error.message);
@@ -34,4 +34,4 @@ const SignUpForm: React.FC = () => {
   );
 };
 
-export default SignUpForm;
+export default SignupForm;

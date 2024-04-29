@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { sendPasswordResetEmail } from 'firebase/auth';
-import { auth } from '../../config/firebaseConfig';
+import { sendPasswordResetEmail, getAuth } from 'firebase/auth';
 
 const ResetPasswordForm: React.FC = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const auth = getAuth();
 
   const handleResetPassword = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
