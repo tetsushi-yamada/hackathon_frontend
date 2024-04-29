@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { fireAuth } from '../../config/firebaseConfig';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const auth = getAuth();
   
   const handleSignIn = async (email: string, password: string) => {
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(fireAuth, email, password);
       console.log(userCredential.user);
     } catch (error: any) {
       console.error(error.message);

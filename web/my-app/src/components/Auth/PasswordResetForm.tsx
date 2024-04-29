@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import { sendPasswordResetEmail, getAuth } from 'firebase/auth';
+import { sendPasswordResetEmail } from 'firebase/auth';
+import { fireAuth } from '../../config/firebaseConfig';
 
 const ResetPasswordForm: React.FC = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-  const auth = getAuth();
 
   const handleResetPassword = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      await sendPasswordResetEmail(auth, email);
+      await sendPasswordResetEmail(fireAuth, email);
       setMessage('パスワードリセットのリンクをメールで送信しました。');
       setError('');
     } catch (err: any) {
