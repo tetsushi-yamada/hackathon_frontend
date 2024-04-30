@@ -1,0 +1,5 @@
+{
+    "rewrites": [
+        { "source": "/web/my-app/(.*)", "destination": "/web/my-app/public/index.html" }
+    ]
+}
