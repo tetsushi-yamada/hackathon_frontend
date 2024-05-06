@@ -1,22 +1,42 @@
+import { useUser } from '../../contexts/UserContext';
 import React, { useState } from 'react';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { fireAuth } from '../../config/firebaseConfig';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { postUser } from '../../routes/api/users';
 
 const SignupForm: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [username, setUsername] = useState<string>('');
+  const [error, setError] = useState<string>('');
+  const { setUserId } = useUser();
 
-  const handleSignUp = async (email: string, password: string) => {
+  const handleSignUp = async (email: string, password: string, username: string) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(fireAuth, email, password);
-      console.log(userCredential.user);
+      if (userCredential.user) {
+        await updateProfile(userCredential.user, {
+          displayName: username
+        });
+        const newUserId = await postUser(username);
+        setUserId(newUserId);
+        console.log('Created user ID:', newUserId);
+      }
     } catch (error: any) {
+      setError(error.message);
       console.error(error.message);
+      setUserId('');
     }
   };
 
   return (
     <div>
+      <input
+        type="text"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        placeholder="Username"
+      />
       <input
         type="email"
         value={email}
@@ -29,7 +49,8 @@ const SignupForm: React.FC = () => {
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Password"
       />
-      <button onClick={() => handleSignUp(email, password)}>Sign Up</button>
+      <button onClick={() => handleSignUp(email, password, username)}>Sign Up</button>
+      {error && <div style={{ color: 'red' }}>{error}</div>}
     </div>
   );
 };
