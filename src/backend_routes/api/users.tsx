@@ -30,7 +30,7 @@ export const postUser = async (user_name: string): Promise<string> => {
 };
 
 
-export const deleteUser = async (user_id: string): Promise<void> => {
+export const deleteUserDB = async (user_id: string): Promise<void> => {
     try {
         await axios.delete(`${API_URL}/${user_id}`);
     } catch (error) {

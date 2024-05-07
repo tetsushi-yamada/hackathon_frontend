@@ -20,4 +20,17 @@ const LogoutForm: React.FC = () => {
   );
 };
 
+const LogoutFunction = async () => {
+  const auth = getAuth();
+  try {
+    await signOut(auth);
+    alert("ログアウトしました。");
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("ログアウトに失敗しました：", error.message);
+    }
+  }
+}
+
 export default LogoutForm;
+export { LogoutFunction };

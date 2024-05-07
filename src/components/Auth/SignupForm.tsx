@@ -2,7 +2,7 @@ import { useUser } from '../../contexts/UserContext';
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { fireAuth } from '../../config/firebaseConfig';
-import { postUser } from '../../routes/api/users';
+import { postUser } from '../../backend_routes/api/users';
 
 const SignupForm: React.FC = () => {
   const [email, setEmail] = useState<string>('');

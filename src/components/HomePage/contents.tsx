@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { useUser } from '../../contexts/UserContext';
-import { fetchUser, deleteUser } from '../../routes/api/users';
-import { getTweetsByUserID, deleteTweet } from '../../routes/api/tweets';
-import GetTweetListComponent from '../Tweets/TweetList';
-import { getFollows, createFollow, deleteFollow } from '../../routes/api/follow';
-import { getFollowers } from '../../routes/api/follower';
-import PostTweet from '../Tweets/TweetTextComponent';
+import { getTweetsByUserID, deleteTweet } from '../../backend_routes/api/tweets';
+import { getFollows, createFollow, deleteFollow } from '../../backend_routes/api/follow';
+import { getFollowers } from '../../backend_routes/api/follower';
+import PostTweet from '../Tweets/PostTweet';
+import GetTweetListComponent from '../Tweets/GetTweet';
 
 export const HomePage: React.FC = () => {
     const { userId } = useUser(); // ユーザーIDを取得
@@ -15,8 +14,6 @@ export const HomePage: React.FC = () => {
             <h1>Home Page</h1>
             <div>
                 <h2>User Actions</h2>
-                <button onClick={() => fetchUser(userId)}>Fetch User</button>
-                <button onClick={() => deleteUser(userId)}>Delete User</button>
             </div>
             <div>
                 <h2>Tweets</h2>

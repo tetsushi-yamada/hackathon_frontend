@@ -1,7 +1,7 @@
 // src/components/TweetList.tsx
 import React, { useState, useEffect } from 'react';
 import { Tweets } from '../../types/tweet.d'; 
-import { getTweetsByUserID } from '../../routes/api/tweets'; 
+import { getTweetsByUserID } from '../../backend_routes/api/tweets'; 
 
 interface TweetListProps {
     userId: string;
