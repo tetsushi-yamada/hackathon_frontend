@@ -30,10 +30,24 @@ export const getTweetsByUserID = async (userId: string): Promise<Tweets> => {
     }
 };
 
+export const updateTweet = async (tweet_id: string, tweet_text: string): Promise<void> => {
+    try {
+        const response = await axios.put(`${API_URL}/by-tweet/${tweet_id}`, {
+            tweet_text: tweet_text
+        });
+        if (response.status === 204) {
+            console.log('Tweet updated successfully');
+        }
+    } catch (error) {
+        console.error('Error updating tweet:', error);
+        throw error;
+    }
+}
+
 // Delete a tweet by ID
 export const deleteTweet = async (tweet_id: string): Promise<void> => {
     try {
-        const response = await axios.delete(`${API_URL}/${tweet_id}`);
+        const response = await axios.delete(`${API_URL}/by-tweet/${tweet_id}`);
         if (response.status === 204) {
             console.log('Tweet deleted successfully');
         }

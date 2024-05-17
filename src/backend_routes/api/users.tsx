@@ -15,9 +15,9 @@ export const fetchUser = async (user_id: string): Promise<User> => {
 }
 };
 
-export const postUser = async (user_name: string): Promise<string> => {
+export const postUser = async (user_id:string, user_name: string): Promise<string> => {
     try {
-        const response = await axios.post(API_URL, { user_name: user_name });
+        const response = await axios.post(API_URL, { user_id:user_id, user_name: user_name });
         if (response.status === 200 || response.status === 201) { 
             return response.data; 
         } else {

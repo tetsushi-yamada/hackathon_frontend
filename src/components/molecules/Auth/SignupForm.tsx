@@ -1,8 +1,8 @@
-import { useUser } from '../../contexts/UserContext';
+import { useUser } from '../../../contexts/UserContext';
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { fireAuth } from '../../config/firebaseConfig';
-import { postUser } from '../../backend_routes/api/users';
+import { fireAuth } from '../../../config/firebaseConfig';
+import { postUser } from '../../../backend_routes/api/users';
 
 const SignupForm: React.FC = () => {
   const [email, setEmail] = useState<string>('');
@@ -18,7 +18,8 @@ const SignupForm: React.FC = () => {
         await updateProfile(userCredential.user, {
           displayName: username
         });
-        const newUserId = await postUser(username);
+        const newUserId = userCredential.user.uid;
+        await postUser(newUserId, username);
         setUserId(newUserId);
         console.log('Created user ID:', newUserId);
       }

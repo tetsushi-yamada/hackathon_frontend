@@ -34,7 +34,7 @@ export const deleteFollow = async (userId: string, followId: string): Promise<vo
     try {
         const url = `${API_URL}/${encodeURIComponent(userId)}/${encodeURIComponent(followId)}`;
         const response = await axios.delete(url);
-        if (response.status !== 204) {
+        if (response.status !== 200) {
             throw new Error('Failed to delete follow relationship');
         }
     } catch (error) {

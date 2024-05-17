@@ -1,7 +1,7 @@
 // src/components/SomeComponent.tsx
 import React, { useState } from 'react';
-import { createTweet } from '../../backend_routes/api/tweets';
-import { useTweet } from '../../contexts/TweetContext';
+import { createTweet } from '../../../backend_routes/api/tweets';
+import { useTweet } from '../../../contexts/TweetContext';
 
 const PostTweet: React.FC<{ userId: string }> = ({ userId }) => {
     const [tweetText, setTweetText] = useState('');

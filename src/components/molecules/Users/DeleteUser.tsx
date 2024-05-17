@@ -1,6 +1,6 @@
 import React from 'react';
-import { useUser } from '../../contexts/UserContext';
-import { deleteUserDB } from '../../backend_routes/api/users';
+import { useUser } from '../../../contexts/UserContext';
+import { deleteUserDB } from '../../../backend_routes/api/users';
 import { LogoutFunction } from '../Auth/LogoutForm';
 import { deleteUserAuth } from '../Auth/DeleteUser';
 
