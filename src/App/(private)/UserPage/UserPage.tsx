@@ -1,20 +1,12 @@
 import React from 'react';
-import LogoutForm from "../../../components/molecules/Auth/LogoutForm";
-import DeleteUser from '../../../components/molecules/Users/DeleteUser';
-import { useUser } from '../../../contexts/UserContext';
-import { MyTweetList } from '../../../components/molecules/Tweets/GetTweet';
+import UserPageComponent from '../../../components/organisms/UserPage';
 
-const UserPageComponent: React.FC = () => {
-    const { userId } = useUser(); 
-
+const UserPage: React.FC = () => {
     return (
         <div>
-            <h1>User Page</h1>
-            <MyTweetList />
-            <DeleteUser userId={userId}/>
-            <LogoutForm />
+            <UserPageComponent />
         </div>
     );
 }
 
-export default UserPageComponent;
+export default UserPage;

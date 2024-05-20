@@ -5,6 +5,10 @@ import { useFollow } from '../../../contexts/FollowsContext';
 import { fetchUser } from '../../../backend_routes/api/users';
 import { useUser } from '../../../contexts/UserContext';
 import { updateTweet } from '../../../backend_routes/api/tweets';
+import NormalButton from '../../atoms/Buttons/NormalButton';
+import NormalInput from '../../atoms/Inputs/NormalInput';
+import { List, ListItem } from '@mui/material';
+import LikeButton from '../../atoms/Buttons/LikeButton';
 
 interface TweetWithUserName extends Tweet {
     user_name: string;
@@ -27,6 +31,7 @@ export const MyTweetList: React.FC = () => {
                     ...tweet,
                     user_name: user.user_name,
                 }));
+                tweetsWithUserName.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
                 setTweets(tweetsWithUserName);
                 setLoading(false);
             } catch (error) {
@@ -61,27 +66,27 @@ export const MyTweetList: React.FC = () => {
     if (error) return <div>{error}</div>;
 
     return (
-        <ul>
+        <List>
             {tweets.map(tweet => (
-                <li key={tweet.tweet_id}>
+                <ListItem key={tweet.tweet_id}>
                     {editTweetId === tweet.tweet_id ? (
                         <div>
-                            <input
-                                type="text"
+                            <NormalInput
+                                label="Edit Tweet"
                                 value={editTweetText}
                                 onChange={e => setEditTweetText(e.target.value)}
                             />
-                            <button onClick={handleSaveClick}>Save</button>
+                            <NormalButton onClick={handleSaveClick}>Save</NormalButton>
                         </div>
                     ) : (
                         <div>
                             <strong>{tweet.user_name}</strong>: {tweet.tweet_text} ({new Date(tweet.created_at).toLocaleString()})
-                            <button onClick={() => handleEditClick(tweet.tweet_id, tweet.tweet_text)}>Edit</button>
+                            <NormalButton onClick={() => handleEditClick(tweet.tweet_id, tweet.tweet_text)}>Edit</NormalButton>
                         </div>
                     )}
-                </li>
+                </ListItem>
             ))}
-        </ul>
+        </List>
     );
 };
 
@@ -129,14 +134,15 @@ const GetTweetListComponent: React.FC = () => {
     const [allTweets, setAllTweets] = useState<TweetWithUserName[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const { userId } = useUser();
 
     useEffect(() => {
         const fetchAllTweets = async () => {
             try {
                 const allFetchedTweets: TweetWithUserName[] = [];
-                for (const userId of followedUsers) {
-                    const fetchedTweets = await getTweetsByUserID(userId);
-                    const user = await fetchUser(userId);
+                for (const follow_userId of followedUsers) {
+                    const fetchedTweets = await getTweetsByUserID(follow_userId);
+                    const user = await fetchUser(follow_userId);
                     const tweetsWithUserName = fetchedTweets.tweets.map(tweet => ({
                         ...tweet,
                         user_name: user.user_name,
@@ -172,6 +178,7 @@ const GetTweetListComponent: React.FC = () => {
                     {allTweets.map(tweet => (
                         <li key={tweet.tweet_id}>
                             <strong>{tweet.user_name}</strong>: {tweet.tweet_text} ({new Date(tweet.created_at).toLocaleString()})
+                            <LikeButton tweetId={tweet.tweet_id} userId={userId} />
                         </li>
                     ))}
                 </ul>

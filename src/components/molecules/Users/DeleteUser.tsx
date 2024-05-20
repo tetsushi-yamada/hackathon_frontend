@@ -3,6 +3,7 @@ import { useUser } from '../../../contexts/UserContext';
 import { deleteUserDB } from '../../../backend_routes/api/users';
 import { LogoutFunction } from '../Auth/LogoutForm';
 import { deleteUserAuth } from '../Auth/DeleteUser';
+import NormalButton from '../../atoms/Buttons/NormalButton';
 
 interface DeleteUserProps {
     userId: string;
@@ -26,7 +27,7 @@ const DeleteUser: React.FC<DeleteUserProps> = ({ userId }) => {
 
     return (
         <div>
-            <button onClick={handleUserClick}>delete User</button>
+            <NormalButton onClick={handleUserClick} color='red'>delete User</NormalButton>
         </div>
     );
 };

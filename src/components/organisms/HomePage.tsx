@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useUser } from '../../contexts/UserContext';
 import PostTweet from '../../components/molecules/Tweets/PostTweet';

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { fireAuth } from '../../../config/firebaseConfig';
+import fireAuth from '../../../config/index';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useUser } from '../../../contexts/UserContext';
 

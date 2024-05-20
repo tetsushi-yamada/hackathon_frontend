@@ -4,3 +4,8 @@ export interface Follow {
     follow_id: string;
     created_at: string;
 }
+
+export interface Follows {
+    follows: Follow[];
+    count: number;
+}

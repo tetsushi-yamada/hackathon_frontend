@@ -1,13 +1,13 @@
 import axios from 'axios';
 import config from '../url/index'
-import { Follow } from '../../types/follow.d';
+import { Follow, Follows } from '../../types/follow.d';
 
 const API_URL = config.apiUrl + '/v1/follows';
 
 // Get all followers for a specific user
-export const getFollows = async (userId: string): Promise<Follow[]> => {
+export const getFollows = async (userId: string): Promise<Follows> => {
     try {
-        const response = await axios.get<Follow[]>(`${API_URL}/${userId}`);
+        const response = await axios.get<Follows>(`${API_URL}/${userId}`);
         return response.data;
     } catch (error) {
         console.error('Error fetching followers:', error);
