@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Home from "../../atoms/Icons/HomeIcon"
 import UserPage from "../../atoms/Icons/UserPageIcon";
 import Search from "../../atoms/Icons/SearchIcon";
+import { Settings } from "../../atoms/Icons/SettingsIcon";
 
 
 const Navbar = () => {
@@ -10,8 +11,7 @@ const Navbar = () => {
         { text: 'Home', link: '/homepage', icon: Home },
         { text: 'Search', link: '/search', icon: Search },
         { text: 'Profile', link: '/userpage', icon: UserPage },
-        // { text: 'Settings', link: '/settings' },
-        // { text: 'Post', link: '/post' }
+        { text: 'Settings', link: '/userpage/settings', icon: Settings},
     ];
     return (
         <List>

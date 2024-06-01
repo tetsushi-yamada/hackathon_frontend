@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import fireAuth from '../../../config/index';
+import { Container, TextField, Button, Typography, Box } from '@mui/material';
 
 const ResetPasswordForm: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -21,21 +22,35 @@ const ResetPasswordForm: React.FC = () => {
   };
 
   return (
-    <div>
-      <h2>パスワードリセット</h2>
-      <form onSubmit={handleResetPassword}>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="メールアドレスを入力"
-          required
-        />
-        <button type="submit">リセットリンクを送信</button>
-      </form>
-      {message && <p style={{ color: 'green' }}>{message}</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-    </div>
+    <Container maxWidth="xs">
+      <Box sx={{ mt: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Typography component="h1" variant="h5">パスワードリセット</Typography>
+        <Box component="form" onSubmit={handleResetPassword} sx={{ mt: 1 }}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="メールアドレスを入力"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            リセットリンクを送信
+          </Button>
+        </Box>
+        {message && <Typography color="success">{message}</Typography>}
+        {error && <Typography color="error">{error}</Typography>}
+      </Box>
+    </Container>
   );
 };
 

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Tweets } from '../../types/tweet.d';
+import { Tweet, Tweets } from '../../types/tweet.d';
 import config from '../url/index'
 
 const API_URL = config.apiUrl + '/v1/tweets';
@@ -19,6 +19,21 @@ export const createTweet = async (userId: string, tweetText: string): Promise<st
     }
 };
 
+export const createReplyTweet = async (userId: string, tweetText: string, parentId: string): Promise<string> => {
+    try {
+        const response = await axios.post(API_URL, {
+            user_id: userId,
+            tweet_text: tweetText,
+            parent_id: parentId
+        });
+        console.log('Tweet created with ID:', response.data);
+        return response.data; // ツイートIDを返す
+    } catch (error) {
+        console.error('Error creating tweet:', error);
+        throw error;
+    }
+}
+
 // Get tweets by user ID
 export const getTweetsByUserID = async (userId: string): Promise<Tweets> => {
     try {
@@ -29,6 +44,17 @@ export const getTweetsByUserID = async (userId: string): Promise<Tweets> => {
         throw error;
     }
 };
+
+export const getTweetsByTweetID = async (tweetId: string): Promise<Tweet> => {
+    try {
+        const response = await axios.get<Tweet>(`${API_URL}/by-tweet/${tweetId}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching tweets:', error);
+        throw error;
+    }
+
+}
 
 export const updateTweet = async (tweet_id: string, tweet_text: string): Promise<void> => {
     try {
@@ -56,3 +82,23 @@ export const deleteTweet = async (tweet_id: string): Promise<void> => {
         throw error;
     }
 };
+
+export const searchTweets = async (searchWord: string): Promise<Tweets> => {
+    try {
+        const response = await axios.get<Tweets>(`${API_URL}/search/${searchWord}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching tweets:', error);
+        throw error;
+    }
+}
+
+export const getReplies = async (tweet_id: string): Promise<Tweets> => {
+    try {
+        const response = await axios.get<Tweets>(`${API_URL}/reply/${tweet_id}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching tweets:', error);
+        throw error;
+    }
+}

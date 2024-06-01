@@ -6,12 +6,17 @@ import { UserProvider } from './contexts/UserContext';
 import UserPage from "./App/(private)/UserPage/UserPage";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { SearchPage } from "./App/(private)/SearchPage/Search";
-import Auth from "./App/(public)/Auth/page";
-import { FollowProvider } from "./contexts/FollowsContext";
 import Navbar from "./components/templates/Navbar/navbar";
-import SearchAppBar from "./components/molecules/Search/SearchBox";
+import SearchAppBar from "./components/atoms/Search/SearchBox";
 import { Grid, Paper } from "@mui/material";
-import UserSettings from "./components/molecules/Users/Settings";
+import UserSettingsPage from "./App/(private)/UserPage/UserSettings/UserSeetings";
+import LoginPage from "./App/(public)/SigninPage/Signin";
+import SignUpPage from "./App/(public)/SignupPage/Signup";
+import PassWordResetPage from "./App/(public)/PassWordResetPage/PassWordReset";
+import AuthSelection from "./components/templates/AuthForm/AuthSelection";
+import { ProfileSettingsPage } from "./App/(private)/UserPage/UserSettings/UserProfileSettings/ProfileSettings";
+import OtherUserPageComponent from "./components/organisms/OtherUserPage";
+import { Navigate } from "react-router-dom";
 
 const App = () => {
   const auth = getAuth();
@@ -27,10 +32,16 @@ const App = () => {
   return (
     <>
       <UserProvider>
-      <FollowProvider>
         {!loginUser && (
           <>
-            <Auth />
+            <Router>
+              <Routes>
+                <Route path="/auth/signin" element={<AuthSelection />} />
+                <Route path="/signin" element={<LoginPage />} />
+                <Route path="/signup" element={<SignUpPage />} />
+                <Route path="/pass-reset" element={<PassWordResetPage />} />
+              </Routes>
+            </Router>
           </>
         )}
         {loginUser && (
@@ -46,7 +57,10 @@ const App = () => {
                         <Route path="/userpage" element={<UserPage />} />
                         <Route path="/homepage" element={<HomePage />} />
                         <Route path="/search" element={<SearchPage />} />
-                        <Route path="/settings" element={<UserSettings />} />
+                        <Route path="/userpage/settings" element={<UserSettingsPage />} />
+                        <Route path="/userpage/settings/profile" element={<ProfileSettingsPage />} />
+                        <Route path="/userpage/:userId" element={<OtherUserPageComponent />} />
+                        <Route path="*" element={<Navigate to="/homepage" />} /> 
                       </Routes>
                     </Paper>
                   </Grid>
@@ -59,7 +73,6 @@ const App = () => {
             </Router>
           </>
         )}
-      </FollowProvider>
       </UserProvider>
     </>
   );

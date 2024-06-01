@@ -16,12 +16,15 @@ const LikeButton: React.FC<LikeButtonProps> = ({ tweetId, userId }) => {
     return storedIsLiked !== null ? JSON.parse(storedIsLiked) : false;
   });
 
+  const [goodsCount, setGoodsCount] = useState<number>(0);
+
   useEffect(() => {
     const checkIfLiked = async () => {
       try {
         const goods = await fetchGoodsByTweetId(tweetId);
         const isCurrentlyLiked = goods.goods.some(good => good.user_id === userId);
         setIsLiked(isCurrentlyLiked);
+        setGoodsCount(goods.count);
         // 状態をローカルストレージに保存
         localStorage.setItem(`isLiked_${tweetId}_${userId}`, JSON.stringify(isCurrentlyLiked));
       } catch (error) {
@@ -36,8 +39,10 @@ const LikeButton: React.FC<LikeButtonProps> = ({ tweetId, userId }) => {
     try {
       if (isLiked) {
         await deleteGood(tweetId, userId);
+        setGoodsCount(goodsCount - 1);
       } else {
         await postGood(tweetId, userId);
+        setGoodsCount(goodsCount + 1);
       }
       const newIsLiked = !isLiked;
       setIsLiked(newIsLiked);
@@ -49,9 +54,12 @@ const LikeButton: React.FC<LikeButtonProps> = ({ tweetId, userId }) => {
   };
 
   return (
-    <IconButton onClick={handleLikeToggle} color={isLiked ? 'secondary' : 'default'}>
-      {isLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-    </IconButton>
+    <div style={{ display: 'inline-block' }}>
+      <IconButton onClick={handleLikeToggle} color={isLiked ? 'secondary' : 'default'}>
+        {isLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+      </IconButton>
+      <span>{goodsCount}</span> 
+    </div>
   );
 };
 

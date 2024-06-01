@@ -46,7 +46,7 @@ export const deleteFollow = async (userId: string, followId: string): Promise<vo
 // ユーザーが別のユーザーをフォローしているかを確認する関数
 export const checkFollow = async (userId: string, followId: string): Promise<boolean> => {
     try {
-        const url = `${API_URL}/${encodeURIComponent(userId)}/${encodeURIComponent(followId)}`;
+        const url = `${API_URL}/${encodeURIComponent(userId)}/${encodeURIComponent(followId)}/check`;
         const response = await axios.get<{ bool: boolean }>(url);
         if (response.status !== 200) {
             throw new Error('Failed to fetch follow status');

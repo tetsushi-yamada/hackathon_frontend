@@ -1,11 +1,11 @@
-import { Settings } from "@mui/icons-material";
+import UserSettings from "../../../../components/organisms/SettingsPage";
 
-const UserSettings: React.FC = () => {
+const UserSettingsPage: React.FC = () => {
     return (
         <div>
-            <Settings />
+            <UserSettings />
         </div>
     )
 }
 
-export default UserSettings
+export default UserSettingsPage

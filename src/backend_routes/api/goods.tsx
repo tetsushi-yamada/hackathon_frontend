@@ -8,10 +8,10 @@ export const fetchGoodsByTweetId = async (tweet_id: string): Promise<Goods> => {
     try {
     const response = await axios.get<Goods>(`${API_URL}?tweet_id=${tweet_id}`);
     return response.data;
-} catch (error) {
+    } catch (error) {
     console.error('Error fetching goods:', error);
     throw error;
-}
+    }
 };
 
 export const fetchGoodsByUserId = async (user_id: string): Promise<Goods> => {
