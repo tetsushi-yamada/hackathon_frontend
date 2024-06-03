@@ -8,7 +8,7 @@ import GetTweetListByUserIdComponent from '../molecules/Tweets/GetTweetByUserId'
 import { GetGoodsTweetListComponent } from '../molecules/Tweets/GetTweetByGoods';
 import { useUser } from '../../contexts/UserContext';
 import PostTweet from '../molecules/Tweets/PostTweet';
-import { Grid, Typography, Box, Container, Paper, Tabs, Tab } from '@mui/material';
+import { Grid, Typography, Box, Container, Tabs, Tab } from '@mui/material';
 
 const UserPageComponent: React.FC<{ userID: string }> = ({ userID }) => { 
     const [user, setUser] = useState<User | null>(null);
@@ -34,11 +34,9 @@ const UserPageComponent: React.FC<{ userID: string }> = ({ userID }) => {
 
     return (
         <Container maxWidth="md">
-            <Box my={4}>
-                <Paper style={{ padding: '20px', margin: '20px' }}>
-                    <Typography variant="h4" component="h1" gutterBottom>
-                        User Page
-                    </Typography>
+            <Typography variant="h4" component="h1" gutterBottom>
+                User Page
+            </Typography>
                     <Grid container alignItems="center" spacing={2}>
                         <Grid item>
                             <ProfilePicture user_id={userID} radius={30} />
@@ -58,8 +56,6 @@ const UserPageComponent: React.FC<{ userID: string }> = ({ userID }) => {
                             <Typography variant="body1">{user.user_description}</Typography>
                         </Box>
                     : null}
-                </Paper>
-                <Paper style={{ padding: '20px', margin: '20px' }}>
                     <Tabs value={selectedTab} onChange={handleTabChange} centered>
                         <Tab label="Tweets" />
                         <Tab label="Goods" />
@@ -68,11 +64,9 @@ const UserPageComponent: React.FC<{ userID: string }> = ({ userID }) => {
                         {selectedTab === 0 && <GetTweetListByUserIdComponent userId={userID} refresh={refreshTweets}/>}
                         {selectedTab === 1 && <GetGoodsTweetListComponent userId={userID} refresh={refreshTweets}/>}
                     </Box>
-                </Paper>
-                <Box position="fixed" bottom={16} right={16}>
+                <Box position="fixed" bottom={110} right={16} zIndex={1000}>
                     <PostTweet userId={userId} onTweetPosted={handleTweetPosted}/>
                 </Box>
-            </Box>
         </Container>
     );
 }

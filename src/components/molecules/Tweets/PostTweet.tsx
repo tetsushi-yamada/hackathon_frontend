@@ -49,6 +49,8 @@ const PostTweet: React.FC<PostTweetProps> = ({ userId, onTweetPosted }) => {
                             width: 56,
                             height: 56,
                             borderRadius: '50%',
+                            position: 'fixed',
+                            zIndex: 1000,
                         }}
                     >
                         <AddIcon />

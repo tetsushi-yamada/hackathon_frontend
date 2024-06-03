@@ -4,6 +4,7 @@ import { TweetWithUserName } from "../../../types";
 import { fetchGoodsByUserId } from "../../../backend_routes/api/goods";
 import { fetchUser } from "../../../backend_routes/api/users";
 import { getTweetsByTweetID, updateTweet, deleteTweet } from "../../../backend_routes/api/tweets";
+import { List } from "@mui/material";
 
 export const GetGoodsTweetListComponent: React.FC<{ userId: string, refresh: boolean }> = ({ userId, refresh }) => {
     const [tweets, setTweets] = useState<TweetWithUserName[]>([]);
@@ -67,18 +68,20 @@ export const GetGoodsTweetListComponent: React.FC<{ userId: string, refresh: boo
         <div>
             {loading && <p>Loading...</p>}
             {error && <p>{error}</p>}
-            {tweets.map(tweet => (
-                <TweetItem 
-                    key={tweet.tweet_id} 
-                    tweet={tweet} 
-                    editTweetId={editTweetId}
-                    editTweetText={editTweetText}
-                    setEditTweetText={setEditTweetText}
-                    handleEditClick={handleEditClick}
-                    handleSaveClick={handleSaveClick}
-                    handleDelete={handleDelete}
-                />
-            ))}
+            <List>
+                {tweets.map(tweet => (
+                    <TweetItem 
+                        key={tweet.tweet_id} 
+                        tweet={tweet} 
+                        editTweetId={editTweetId}
+                        editTweetText={editTweetText}
+                        setEditTweetText={setEditTweetText}
+                        handleEditClick={handleEditClick}
+                        handleSaveClick={handleSaveClick}
+                        handleDelete={handleDelete}
+                    />
+                ))}
+            </List>
         </div>
     );
 }

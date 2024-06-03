@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
-import { getAuth, onAuthStateChanged, User } from "firebase/auth"; // User型をインポート
+import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import { HomePage } from "./App/(private)/HomePage/HomePage";
 import fireAuth from "./config/index";
 import { UserProvider } from './contexts/UserContext';
 import UserPage from "./App/(private)/UserPage/UserPage";
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { SearchPage } from "./App/(private)/SearchPage/Search";
 import Navbar from "./components/templates/Navbar/navbar";
 import SearchAppBar from "./components/atoms/Search/SearchBox";
-import { Grid, Paper } from "@mui/material";
+import { Grid, Paper, useMediaQuery } from "@mui/material";
 import UserSettingsPage from "./App/(private)/UserPage/UserSettings/UserSeetings";
 import LoginPage from "./App/(public)/SigninPage/Signin";
 import SignUpPage from "./App/(public)/SignupPage/Signup";
@@ -16,17 +16,19 @@ import PassWordResetPage from "./App/(public)/PassWordResetPage/PassWordReset";
 import AuthSelection from "./components/templates/AuthForm/AuthSelection";
 import { ProfileSettingsPage } from "./App/(private)/UserPage/UserSettings/UserProfileSettings/ProfileSettings";
 import OtherUserPageComponent from "./components/organisms/OtherUserPage";
-import { Navigate } from "react-router-dom";
 
 const App = () => {
   const auth = getAuth();
-  const [loginUser, setLoginUser] = useState<User | null>(null); // loginUserの型をUser | nullに設定
+  const [loginUser, setLoginUser] = useState<User | null>(null);
+
+  const isWideScreen = useMediaQuery('(min-width:1100px)');
+  const isSmallScreen = useMediaQuery('(max-width:640px)');
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(fireAuth, user => {
-      setLoginUser(user); // userはUser型またはnull
+      setLoginUser(user);
     });
-    return () => unsubscribe(); // コンポーネントのアンマウント時にリスナーを解除
+    return () => unsubscribe();
   }, [auth]);
 
   return (
@@ -48,10 +50,10 @@ const App = () => {
           <>
             <Router>
               <Grid container spacing={2} style={{ marginTop: 16 }}>
-                  <Grid item xs={2}>
+                  <Grid item xs={isSmallScreen ? 12 : 2}>
                     <Navbar />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={isWideScreen ? 6 : isSmallScreen ? 12 : 10} style={{ marginTop: isSmallScreen ? '60px' : '0' }}>
                     <Paper style={{ padding: 16, height: '100%' }}>
                       <Routes>
                         <Route path="/userpage" element={<UserPage />} />
@@ -64,11 +66,13 @@ const App = () => {
                       </Routes>
                     </Paper>
                   </Grid>
-                  <Grid item xs={4}>
-                    <Paper style={{ padding: 16, height: '100%' }}>
-                      <SearchAppBar />
-                    </Paper>
-                  </Grid>
+                  {isWideScreen && (
+                    <Grid item xs={4}>
+                      <Paper style={{ padding: 16, height: '100%' }}>
+                        <SearchAppBar />
+                      </Paper>
+                    </Grid>
+                  )}
               </Grid>
             </Router>
           </>

@@ -5,9 +5,7 @@ import { useUser } from '../../../contexts/UserContext';
 const UserPage: React.FC = () => {
     const { userId } = useUser();
     return (
-        <div>
             <UserPageComponent userID={userId} />
-        </div>
     );
 }
 

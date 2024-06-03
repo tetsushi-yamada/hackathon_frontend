@@ -9,9 +9,10 @@ import { deleteTweet } from '../../../backend_routes/api/tweets';
 
 interface SearchProps {
     searchWord: string;
+    refresh: boolean;
 }
 
-export const SearchTweetList: React.FC<SearchProps> = ({ searchWord }) => {
+export const SearchTweetList: React.FC<SearchProps> = ({ searchWord, refresh }) => {
     const [tweets, setTweets] = useState<TweetWithUserName[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -37,7 +38,7 @@ export const SearchTweetList: React.FC<SearchProps> = ({ searchWord }) => {
             }
         };
         fetchTweetsAndUser();
-    }, [searchWord]);
+    }, [searchWord, refresh]);
 
     const handleEditClick = (tweet_id: string, tweet_text: string) => {
         setEditTweetId(tweet_id);

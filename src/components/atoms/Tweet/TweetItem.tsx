@@ -86,7 +86,7 @@ const TweetItem: React.FC<TweetItemProps> = ({
 
 
     return (
-        <ListItem style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: '16px', borderBottom: '1px solid #ccc' }}>
+        <ListItem style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: '16px', borderBottom: '1px solid #ccc', position:'relative', zIndex: 10 }}>
             {editTweetId === tweet.tweet_id ? (
                 <div style={{ width: '100%' }}>
                     <NormalInput

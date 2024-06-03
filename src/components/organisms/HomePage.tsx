@@ -18,7 +18,7 @@ export const HomePageComponent: React.FC = () => {
             <div>
                 <GetTweetListComponent refresh={refreshTweets}/>
             </div>
-            <Box position="fixed" bottom={16} right={16}>
+            <Box position="fixed" bottom={110} right={16} zIndex={1000}>
                 <PostTweet userId={userId} onTweetPosted={handleTweetPosted}/>
             </Box>
         </Container>
