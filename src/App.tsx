@@ -16,7 +16,6 @@ import PassWordResetPage from "./App/(public)/PassWordResetPage/PassWordReset";
 import AuthSelection from "./components/templates/AuthForm/AuthSelection";
 import { ProfileSettingsPage } from "./App/(private)/UserPage/UserSettings/UserProfileSettings/ProfileSettings";
 import OtherUserPageComponent from "./components/organisms/OtherUserPage";
-import { Helmet } from 'react-helmet-async';
 
 const App = () => {
   const auth = getAuth();
@@ -34,28 +33,24 @@ const App = () => {
 
   return (
     <>
-      <Helmet>
-        <title>React App</title>
-        <meta property="og:title" content="UTwitter" />
-        <meta property="og:description" content="You can Tweet as you like!" />
-        <meta property="og:image" content="https://storage.googleapis.com/hackathon_backend_ogp/hackathon_ogp.jpeg" />
-        <meta property="og:url" content="https://hackathon-frontend-joc4-rnpeywfnp-tetsushi-yamadas-projects.vercel.app" />
-        <meta name="twitter:card" content="summary_large_image" />
-      </Helmet>
       <UserProvider>
-        <Router>
-          <Routes>
-            {!loginUser ? (
-              <>
+        {!loginUser && (
+          <>
+            <Router>
+              <Routes>
                 <Route path="/auth/signin" element={<AuthSelection />} />
                 <Route path="/signin" element={<LoginPage />} />
                 <Route path="/signup" element={<SignUpPage />} />
                 <Route path="/pass-reset" element={<PassWordResetPage />} />
                 <Route path="*" element={<Navigate to="/auth/signin" />} /> 
-              </>
-            ) : (
-              <>
-                <Grid container spacing={2} style={{ marginTop: 16 }}>
+              </Routes>
+            </Router>
+          </>
+        )}
+        {loginUser && (
+          <>
+            <Router>
+              <Grid container spacing={2} style={{ marginTop: 16 }}>
                   <Grid item xs={isSmallScreen ? 12 : 2}>
                     <Navbar />
                   </Grid>
@@ -79,11 +74,10 @@ const App = () => {
                       </Paper>
                     </Grid>
                   )}
-                </Grid>
-              </>
-            )}
-          </Routes>
-        </Router>
+              </Grid>
+            </Router>
+          </>
+        )}
       </UserProvider>
     </>
   );
