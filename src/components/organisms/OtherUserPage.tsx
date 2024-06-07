@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import ProfilePicture from '../molecules/Users/ProfilePictureGet';
 import { fetchUser } from '../../backend_routes/api/users';
 import { User } from '../../types';
-import { Settings } from '../atoms/Icons/SettingsIcon';
 import GetTweetListByUserIdComponent from '../molecules/Tweets/GetTweetByUserId';
 import { GetGoodsTweetListComponent } from '../molecules/Tweets/GetTweetByGoods';
 import { useUser } from '../../contexts/UserContext';
 import PostTweet from '../molecules/Tweets/PostTweet';
 import { Grid, Typography, Box, Container, Tabs, Tab } from '@mui/material';
+import FollowButton from '../atoms/Buttons/FollowButton';
 
 const OtherUserPageComponent: React.FC = () => {
     const userID = useParams<{ userId: string }>().userId;
@@ -58,9 +58,7 @@ const OtherUserPageComponent: React.FC = () => {
                                 </Typography>
                             </Grid>
                             <Grid item>
-                                <Link to="/userpage/settings">
-                                    <Settings />
-                                </Link>
+                                {user ? <FollowButton user={user} /> : null}
                             </Grid>
                         </Grid>
                         {user?.user_description ? (

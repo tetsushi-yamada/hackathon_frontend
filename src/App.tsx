@@ -21,7 +21,7 @@ const App = () => {
   const auth = getAuth();
   const [loginUser, setLoginUser] = useState<User | null>(null);
 
-  const isWideScreen = useMediaQuery('(min-width:1100px)');
+  const isWideScreen = useMediaQuery('(min-width:1175px)');
   const isSmallScreen = useMediaQuery('(max-width:640px)');
 
   useEffect(() => {

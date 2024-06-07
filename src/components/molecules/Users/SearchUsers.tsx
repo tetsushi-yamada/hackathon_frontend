@@ -23,20 +23,18 @@ export const SearchUserList: React.FC<SearchProps> = ({ searchWord }) => {
             try {
                 const fetchedUsers = await searchUser(searchWord);
                 if (fetchedUsers.count === 0) {
-                    setError('No users');
-                } else {
-                    setError('');
+                    setError('No Users Found');
                 }
                 setUsers(fetchedUsers);
                 setLoading(false);
             } catch (error) {
-                setError('No Users Found');
+                setError('Failed to fetch users');
                 setLoading(false);
                 console.error(error);
             }
         };
         fetchUsers();
-    }, [searchWord]);
+    });
 
     if (loading) return <div>Loading...</div>;
 
