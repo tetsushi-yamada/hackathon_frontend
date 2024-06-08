@@ -34,6 +34,21 @@ export const createReplyTweet = async (userId: string, tweetText: string, parent
     }
 }
 
+export const createRetweet = async (userId: string, tweet_text: string, tweetId: string): Promise<string> => {
+    try {
+        const response = await axios.post(API_URL, {
+            user_id: userId,
+            tweet_text: tweet_text,
+            retweet_id: tweetId
+        });
+        console.log('Tweet created with ID:', response.data);
+        return response.data; // ツイートIDを返す
+    } catch (error) {
+        console.error('Error creating tweet:', error);
+        throw error;
+    }
+}
+
 // Get tweets by user ID
 export const getTweetsByUserID = async (userId: string): Promise<Tweets> => {
     try {
@@ -96,6 +111,16 @@ export const searchTweets = async (searchWord: string): Promise<Tweets> => {
 export const getReplies = async (tweet_id: string): Promise<Tweets> => {
     try {
         const response = await axios.get<Tweets>(`${API_URL}/reply/${tweet_id}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching tweets:', error);
+        throw error;
+    }
+}
+
+export const getRetweets = async (tweet_id: string): Promise<Tweets> => {
+    try {
+        const response = await axios.get<Tweets>(`${API_URL}/retweet/${tweet_id}`);
         return response.data;
     } catch (error) {
         console.error('Error fetching tweets:', error);

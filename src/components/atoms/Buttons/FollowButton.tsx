@@ -3,6 +3,7 @@ import { useUser } from '../../../contexts/UserContext';
 import { deleteFollow, createFollow, checkFollow } from '../../../backend_routes/api/follow';
 import NormalButton from './NormalButton';
 import { User } from '../../../types/user.d';
+import { useNavigate } from 'react-router-dom';
 
 interface OtherUserPageProps {
     user: User;
@@ -11,6 +12,7 @@ interface OtherUserPageProps {
 const FollowButton: React.FC<OtherUserPageProps> = ({ user }) => {
     const { userId } = useUser();
     const [followOrNot, setFollowOrNot] = useState<boolean>(false);
+    const navigate = useNavigate();
 
     const checkFollowStatus = async () => {
         if (userId) {
@@ -21,7 +23,7 @@ const FollowButton: React.FC<OtherUserPageProps> = ({ user }) => {
 
     useEffect(() => {
         checkFollowStatus();
-    }, []);
+    });
 
     const handleFollow = async (): Promise<void> => {
         try {
@@ -32,6 +34,8 @@ const FollowButton: React.FC<OtherUserPageProps> = ({ user }) => {
                     await createFollow(userId, user.user_id);
                 }
                 await checkFollowStatus();  // フォロー状態を再確認
+            } else {
+                navigate(`/userpage/settings/profile`);
             }
         } catch (error) {
             console.error('フォロー操作に失敗しました', error);

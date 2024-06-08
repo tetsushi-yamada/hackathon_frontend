@@ -99,11 +99,6 @@ const SearchAppBar: React.FC = () => {
                 <CircularProgress />
             ) : (
                 <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-                    {results.length === 0 && !loading && searchWord && (
-                        <Typography variant="body2" color="textSecondary">
-                            No Users Found
-                        </Typography>
-                    )}
                     {results.map((user) => (
                         <ListItem key={user.user_id} sx={{ display: 'flex', alignItems: 'center', py: 2 }}>
                             <Link to={`/userpage/${user.user_id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'flex', width: '100%' }}>
