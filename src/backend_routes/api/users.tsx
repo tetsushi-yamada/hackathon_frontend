@@ -29,10 +29,9 @@ export const postUser = async (user_id:string, user_name: string): Promise<strin
     }
 };
 
-export const updateUser = async (user_id: string, user_name: string, user_description: string): Promise<void> => {
+export const updateUser = async (user_id: string, user_name: string, user_description: string, is_private: boolean): Promise<void> => {
     try {
-        await axios.put(`${API_URL}/${user_id}`, { user_name: user_name, user_description: user_description });
-        console.log('user_id:', user_id);
+        await axios.put(`${API_URL}/${user_id}`, { user_name: user_name, user_description: user_description, is_private: is_private });
     } catch (error) {
         console.error('Error updating user:', error);
         throw error;

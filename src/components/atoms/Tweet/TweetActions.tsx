@@ -16,6 +16,7 @@ interface TweetActionsProps {
     onFetchReplies: () => void;
     onDelete: () => void;
     onEditClick: () => void;
+    showRetweetButton: boolean;
 }
 
 const TweetActions: React.FC<TweetActionsProps> = ({
@@ -26,7 +27,8 @@ const TweetActions: React.FC<TweetActionsProps> = ({
     onReplySubmitted,
     onFetchReplies,
     onDelete,
-    onEditClick
+    onEditClick,
+    showRetweetButton
 }) => {
     const [modalOpen, setModalOpen] = React.useState(false);
 
@@ -34,7 +36,9 @@ const TweetActions: React.FC<TweetActionsProps> = ({
         <div style={{ marginTop: '8px', display: 'flex', gap: '8px' }}>
             <LikeButton tweetId={tweetId} userId={userId} />
             <ReplyButton tweetId={tweetId} userId={userId} onReplySubmitted={onReplySubmitted} />
-            <RetweetButton tweetId={tweetId} userId={userId} onRetweetSubmitted={onReplySubmitted} />
+            {showRetweetButton &&
+                <RetweetButton tweetId={tweetId} userId={userId} onRetweetSubmitted={onReplySubmitted} />
+            }
             <IconButton onClick={() => setModalOpen(true)}>
                 <DeleteIcon />
             </IconButton>

@@ -4,6 +4,7 @@ import { ArrowBack } from "../atoms/Icons/ArrowBackIcon";
 import { IconButton } from "@mui/material";
 import UpdateUserDescriptionForm from "../molecules/Users/ProfileDescriptionUpdate";
 import UpdateUserNameForm from "../molecules/Users/ProfileUserNameUpdate";
+import SetIsPrivateForm from "../molecules/Users/SetIsPrivateForm";
 
 export const ProfileSettings: React.FC = () => {
     const navigate = useNavigate();
@@ -16,6 +17,7 @@ export const ProfileSettings: React.FC = () => {
             <ProfilePictureUploadForm />
             <UpdateUserNameForm />
             <UpdateUserDescriptionForm />
+            <SetIsPrivateForm />
         </div>
     );
 }

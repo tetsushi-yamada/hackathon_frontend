@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { createTweet } from '../../../backend_routes/api/tweets';
 import { uploadTweetPicture } from '../../../backend_routes/api/tweet_picture';
 import { Container, Grid, IconButton, Dialog, DialogContent, Button, TextField, Input, Box } from '@mui/material';
