@@ -1,15 +1,17 @@
 import axios from 'axios';
 import { Tweet, Tweets } from '../../types/tweet.d';
 import config from '../url/index'
+import { checkTweetForInappropriateness } from './openapi';
 
 const API_URL = config.apiUrl + '/v1/tweets';
 
 // Create a new tweet
-export const createTweet = async (userId: string, tweetText: string): Promise<string> => {
+export const createTweet = async (userId: string, tweetText: string, is_inappropriate: boolean): Promise<string> => {
     try {
         const response = await axios.post(API_URL, {
             user_id: userId,
-            tweet_text: tweetText
+            tweet_text: tweetText,
+            is_inappropriate: is_inappropriate
         });
         console.log('Tweet created with ID:', response.data);
         return response.data; // ツイートIDを返す
@@ -19,12 +21,13 @@ export const createTweet = async (userId: string, tweetText: string): Promise<st
     }
 };
 
-export const createReplyTweet = async (userId: string, tweetText: string, parentId: string): Promise<string> => {
+export const createReplyTweet = async (userId: string, tweetText: string, parentId: string, is_inappropriate: boolean): Promise<string> => {
     try {
         const response = await axios.post(API_URL, {
             user_id: userId,
             tweet_text: tweetText,
-            parent_id: parentId
+            parent_id: parentId,
+            is_inappropriate: is_inappropriate
         });
         console.log('Tweet created with ID:', response.data);
         return response.data; // ツイートIDを返す
@@ -34,12 +37,13 @@ export const createReplyTweet = async (userId: string, tweetText: string, parent
     }
 }
 
-export const createRetweet = async (userId: string, tweet_text: string, tweetId: string): Promise<string> => {
+export const createRetweet = async (userId: string, tweet_text: string, tweetId: string, is_inappropriate: boolean): Promise<string> => {
     try {
         const response = await axios.post(API_URL, {
             user_id: userId,
             tweet_text: tweet_text,
-            retweet_id: tweetId
+            retweet_id: tweetId,
+            is_inappropriate: is_inappropriate
         });
         console.log('Tweet created with ID:', response.data);
         return response.data; // ツイートIDを返す
@@ -73,8 +77,10 @@ export const getTweetsByTweetID = async (tweetId: string): Promise<Tweet> => {
 
 export const updateTweet = async (tweet_id: string, tweet_text: string): Promise<void> => {
     try {
+        const is_inappropriate = await checkTweetForInappropriateness(tweet_text);
         const response = await axios.put(`${API_URL}/by-tweet/${tweet_id}`, {
-            tweet_text: tweet_text
+            tweet_text: tweet_text,
+            is_inappropriate: is_inappropriate
         });
         if (response.status === 204) {
             console.log('Tweet updated successfully');

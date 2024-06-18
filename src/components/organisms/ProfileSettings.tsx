@@ -5,6 +5,7 @@ import { IconButton } from "@mui/material";
 import UpdateUserDescriptionForm from "../molecules/Users/ProfileDescriptionUpdate";
 import UpdateUserNameForm from "../molecules/Users/ProfileUserNameUpdate";
 import SetIsPrivateForm from "../molecules/Users/SetIsPrivateForm";
+import SetIsSuspendedForm from "../molecules/Users/SetIsSuspendedForm";
 
 export const ProfileSettings: React.FC = () => {
     const navigate = useNavigate();
@@ -18,6 +19,7 @@ export const ProfileSettings: React.FC = () => {
             <UpdateUserNameForm />
             <UpdateUserDescriptionForm />
             <SetIsPrivateForm />
+            <SetIsSuspendedForm />
         </div>
     );
 }

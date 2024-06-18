@@ -34,7 +34,6 @@ const GetTweetListComponent: React.FC<{ refresh: boolean }> = ({ refresh }) => {
                     }
                     allFetchedTweets.push(...myTweetsWithUserName);
                 } catch (error) {
-                    console.error(`Failed to fetch tweets or user for userId: ${userId}`, error);
                 }
 
                 // フォローしているユーザーのツイートを取得
@@ -54,7 +53,6 @@ const GetTweetListComponent: React.FC<{ refresh: boolean }> = ({ refresh }) => {
                         }
                     }
                 } catch (error) {
-                    console.error(`Failed to fetch tweets or user for follow_userId: `, error);
                 }
 
                 // ツイートを日付順にソート
@@ -64,7 +62,6 @@ const GetTweetListComponent: React.FC<{ refresh: boolean }> = ({ refresh }) => {
             } catch (error) {
                 setError('Failed to fetch tweets or users');
                 setLoading(false);
-                console.error('General error fetching tweets or users', error);
             }
         };
 

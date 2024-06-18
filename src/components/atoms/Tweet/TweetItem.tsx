@@ -8,7 +8,7 @@ import ProfileHeader from './ProfileHeader';
 import TweetContent from './TweetContent';
 import TweetActions from './TweetActions';
 import RepliesList from './RepliesList';
-import { TweetWithUserName } from '../../../types/tweet.d';
+import { TweetWithUserName, TweetWithUserNameAndAppropriate } from '../../../types/tweet.d';
 import { User } from '../../../types';
 import NormalInput from '../Inputs/NormalInput';
 import NormalButton from '../Buttons/NormalButton';
@@ -35,7 +35,7 @@ const TweetItem: React.FC<TweetItemProps> = ({
 }) => {
     const { userId } = useUser();
     const [isFollowing, setIsFollowing] = useState<boolean>(false);
-    const [replies, setReplies] = useState<TweetWithUserName[]>([]);
+    const [replies, setReplies] = useState<TweetWithUserNameAndAppropriate[]>([]);
     const [loadingReplies, setLoadingReplies] = useState(false);
     const [hasReplies, setHasReplies] = useState(false);
     const [replyButtonClicked, setReplyButtonClicked] = useState(false);
@@ -43,8 +43,11 @@ const TweetItem: React.FC<TweetItemProps> = ({
     const [loadingPicture, setLoadingPicture] = useState(false);
     const [editReplyId, setEditReplyId] = useState<string | null>(null);
     const [editReplyText, setEditReplyText] = useState<string>('');
-    const [originalTweet, setOriginalTweet] = useState<TweetWithUserName | null>(null);
+    const [originalTweet, setOriginalTweet] = useState<TweetWithUserNameAndAppropriate | null>(null);
+    const [replyCount , setReplyCount] = useState<number>(0);
     const [user, setUser] = useState<User | null>(null);
+    const [isInappropriate, setIsInappropriate] = useState<boolean>(false);
+    const [editingUser, setEditingUser] = useState<User | null>(null);
 
     useEffect(() => {
         const getUser = async () => {
@@ -53,6 +56,14 @@ const TweetItem: React.FC<TweetItemProps> = ({
         };
         getUser();
     }, [tweet.user_id]);
+
+    useEffect(() => {
+        const getUser = async () => {
+            const user = await fetchUser(userId);
+            setEditingUser(user);
+        };
+        getUser();
+    },[userId]);
 
     const checkFollowStatus = useCallback(async () => {
         if (userId && tweet.user_id) {
@@ -70,11 +81,13 @@ const TweetItem: React.FC<TweetItemProps> = ({
             const fetchedReplies = await getReplies(tweet.tweet_id);
             if (fetchedReplies && fetchedReplies.tweets && fetchedReplies.tweets.length > 0) {
                 const repliesWithUserName = await Promise.all(fetchedReplies.tweets.map(async (reply) => {
+                    const r = await getTweetsByTweetID(reply.tweet_id);
                     const user = await fetchUser(reply.user_id);
                     if (userId === reply.user_id) {
                         return {
                             ...reply,
                             user_name: user.user_name,
+                            is_inappropriate: r.is_inappropriate
                         };
                     } else if (user.is_private) {
                         const isFollowing = await checkFollow(userId, reply.user_id);
@@ -82,6 +95,7 @@ const TweetItem: React.FC<TweetItemProps> = ({
                             return {
                                 ...reply,
                                 user_name: user.user_name,
+                                is_inappropriate: r.is_inappropriate
                             };
                         } else {
                             return null;
@@ -90,15 +104,17 @@ const TweetItem: React.FC<TweetItemProps> = ({
                         return {
                             ...reply,
                             user_name: user.user_name,
+                            is_inappropriate: r.is_inappropriate
                         };
                     }
                 }));
-                const nonNullReplies = repliesWithUserName.filter((reply): reply is TweetWithUserName => reply !== null);
+                const nonNullReplies = repliesWithUserName.filter((reply): reply is TweetWithUserNameAndAppropriate => reply !== null);
                 setReplies(nonNullReplies);
                 if (nonNullReplies.length > 0) {
                     setHasReplies(true);
+                    setReplyCount(nonNullReplies.length);
                 } else {
-                    setHasReplies(false);
+                    setHasReplies(false)
                     setReplyButtonClicked(false);
                     setReplies([]);
                 }
@@ -120,10 +136,12 @@ const TweetItem: React.FC<TweetItemProps> = ({
         try {
             const fetchedReplies = await getReplies(tweet.tweet_id);
             const repliesWithUserName = await Promise.all(fetchedReplies.tweets.map(async (reply) => {
+                const r = await getTweetsByTweetID(reply.tweet_id);
                 const user = await fetchUser(reply.user_id);
                 return {
                     ...reply,
                     user_name: user.user_name,
+                    is_inappropriate: r.is_inappropriate
                 };
             }));
             setReplies(repliesWithUserName);
@@ -149,20 +167,19 @@ const TweetItem: React.FC<TweetItemProps> = ({
 
     useEffect(() => {
         checkReplies();
-    });
+    },[]);
 
     useEffect(() => {
         const loadTweetPicture = async () => {
             setLoadingPicture(true);
             try {
                 const pictureBlob = await getTweetPicture(tweet.tweet_id);
-                if (pictureBlob.size > 0) {
+                if (pictureBlob && pictureBlob.size > 0) {
                     setTweetPicture(pictureBlob);
                 } else {
                     setTweetPicture(null);
                 }
             } catch (error) {
-                console.error('Error fetching tweet picture:', error);
                 setTweetPicture(null);
             } finally {
                 setLoadingPicture(false);
@@ -181,6 +198,7 @@ const TweetItem: React.FC<TweetItemProps> = ({
                     const originalTweetDataWithUserName = {
                         ...originalTweetData,
                         user_name: user.user_name,
+                        is_inappropriate: originalTweetData.is_inappropriate
                     };
                     setOriginalTweet(originalTweetDataWithUserName);
                 } catch (error) {
@@ -193,6 +211,18 @@ const TweetItem: React.FC<TweetItemProps> = ({
 
         fetchOriginalTweet();
     }, [tweet.retweet_id]);
+
+    useEffect(() => {
+        const checkInappropriateness = async () => {
+            try {
+                const t = await getTweetsByTweetID(tweet.tweet_id);
+                setIsInappropriate(t.is_inappropriate);
+            } catch (error) {
+                console.error('Failed to check inappropriateness:', error);
+            }
+        }
+        checkInappropriateness();
+    },[tweet])
 
     if (userId !== tweet.user_id && user?.is_private && !isFollowing) {
         return null; // フォローしていない場合は何も表示しない
@@ -214,12 +244,29 @@ const TweetItem: React.FC<TweetItemProps> = ({
             ) : (
                 <div style={{ width: '100%' }}>
                     <ProfileHeader userId={tweet.user_id} />
-                    <TweetContent text={tweet.tweet_text} createdAt={tweet.created_at} picture={tweetPicture} loadingPicture={loadingPicture} />
+                    {editingUser?.is_suspended && isInappropriate ? (
+                        <div style={{padding: '16px', backgroundColor: '#ffcccc', borderRadius: '8px', width: '100%'}}>
+                            <p>This tweet may contain inappropriate content.</p>
+                            <p>This tweet has been hidden.</p>
+                        </div>
+                    ) : (
+                        <TweetContent text={tweet.tweet_text} createdAt={tweet.created_at} picture={tweetPicture} loadingPicture={loadingPicture} />
+                    )}
                     {originalTweet && (
-                        <Box mt={2} p={2} style={{ backgroundColor: '#f0f0f0', borderRadius: '8px', width: '100%' }}>
-                            <ProfileHeader userId={originalTweet.user_id} />
-                            <TweetContent text={originalTweet.tweet_text} createdAt={originalTweet.created_at} picture={tweetPicture} loadingPicture={loadingPicture} />
-                        </Box>
+                        editingUser?.is_suspended && originalTweet.is_inappropriate ? (
+                            <div style={{ width: '100%' }}>
+                                <ProfileHeader userId={originalTweet.user_id} />
+                                <div style={{padding: '16px', backgroundColor: '#ffcccc', borderRadius: '8px', width: '100%'}}>
+                                    <p>This tweet may contain inappropriate content.</p>
+                                    <p>This tweet has been hidden.</p>
+                                </div>
+                            </div>
+                        ) : (
+                            <Box mt={2} p={2} style={{ backgroundColor: '#f0f0f0', borderRadius: '8px', width: '100%' }}>
+                                <ProfileHeader userId={originalTweet.user_id} />
+                                <TweetContent text={originalTweet.tweet_text} createdAt={originalTweet.created_at} picture={tweetPicture} loadingPicture={loadingPicture} />
+                            </Box>
+                        )
                     )}
                     <TweetActions
                         tweetId={tweet.tweet_id}
@@ -230,6 +277,8 @@ const TweetItem: React.FC<TweetItemProps> = ({
                         onFetchReplies={fetchReplies}
                         onDelete={() => handleDelete(tweet.tweet_id)}
                         onEditClick={() => handleEditClick(tweet.tweet_id, tweet.tweet_text)}
+                        replyCount={replyCount}
+                        setReplyCount={setReplyCount}
                         showRetweetButton={!user?.is_private} // 鍵垢の場合はリツイートボタンを非表示にする
                     />
                     {replyButtonClicked && hasReplies && replies.length > 0 && (
@@ -243,6 +292,7 @@ const TweetItem: React.FC<TweetItemProps> = ({
                             handleDelete={handleDelete}
                             hasReplies={hasReplies}
                             setHasReplies={setHasReplies}
+                            editingUser={editingUser}
                         />
                     )}
                 </div>

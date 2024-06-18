@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createTweet } from '../../../backend_routes/api/tweets';
 import { uploadTweetPicture } from '../../../backend_routes/api/tweet_picture';
 import { Container, Grid, IconButton, Dialog, DialogContent, Button, TextField, Input, Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import { styled } from '@mui/material/styles';
+import { checkTweetForInappropriateness } from '../../../backend_routes/api/openapi';
 
 interface PostTweetProps {
     userId: string;
@@ -39,11 +40,26 @@ const PostTweet: React.FC<PostTweetProps> = ({ userId, onTweetPosted }) => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
 
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.shiftKey && event.key === 'T') {
+                event.preventDefault();
+                setOpen(true);
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
+
     const handleTweetClick = async () => {
         if (tweetText.trim() === '') return;
 
         try {
-            const tweetId = await createTweet(userId, tweetText);
+            const inappropriate = await checkTweetForInappropriateness(tweetText);
+            const tweetId = await createTweet(userId, tweetText, inappropriate);
             console.log('Created tweet ID:', tweetId);
 
             if (selectedFile) {
@@ -61,10 +77,6 @@ const PostTweet: React.FC<PostTweetProps> = ({ userId, onTweetPosted }) => {
         } catch (error) {
             console.error('Failed to create tweet:', error);
         }
-    };
-
-    const handleOpen = () => {
-        setOpen(true);
     };
 
     const handleClose = () => {
@@ -92,7 +104,7 @@ const PostTweet: React.FC<PostTweetProps> = ({ userId, onTweetPosted }) => {
             <Container maxWidth="sm">
                 <Grid container spacing={2} justifyContent="flex-end">
                     <IconButton
-                        onClick={handleOpen}
+                        onClick={() => setOpen(true)}
                         style={{
                             backgroundColor: '#1976d2',
                             color: 'white',

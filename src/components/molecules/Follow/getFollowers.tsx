@@ -65,7 +65,7 @@ const GetFollowers: React.FC<GetFollowsProps> = ({ userID }) => {
     }
 
     if (!followers || followers.length === 0) {
-        return <div>No follows yet.</div>;
+        return <div>No followers yet.</div>;
     }
 
     console.log(followers);

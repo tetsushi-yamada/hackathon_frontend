@@ -31,7 +31,7 @@ const UpdateUserDescriptionForm: React.FC = () => {
         e.preventDefault();
         try {
             const user: User = await fetchUser(userId);
-            await updateUser(userId, user.user_name, description, user.is_private);
+            await updateUser(userId, user.user_name, description, user.is_private, user.is_suspended);
             setSuccessMessage('User description updated successfully');
             setIsEditing(false);
         } catch (error) {

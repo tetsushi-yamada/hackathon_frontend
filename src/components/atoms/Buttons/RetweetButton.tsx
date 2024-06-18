@@ -4,6 +4,7 @@ import RepeatIcon from '@mui/icons-material/Repeat';
 import NormalInput from '../Inputs/NormalInput'; 
 import NormalButton from './NormalButton';
 import { createRetweet, getRetweets } from '../../../backend_routes/api/tweets'; // fetchRetweetsByTweetId関数をインポート
+import { checkTweetForInappropriateness } from '../../../backend_routes/api/openapi';
 
 interface RetweetButtonProps {
     tweetId: string;
@@ -31,7 +32,6 @@ const RetweetButton: React.FC<RetweetButtonProps> = ({ tweetId, userId, onRetwee
                 // 状態をローカルストレージに保存
                 localStorage.setItem(`isRetweeted_${tweetId}_${userId}`, JSON.stringify(isCurrentlyRetweeted));
             } catch (error) {
-                console.error('Failed to fetch retweet count:', error);
             }
         };
 
@@ -44,7 +44,8 @@ const RetweetButton: React.FC<RetweetButtonProps> = ({ tweetId, userId, onRetwee
 
     const handleRetweetSubmit = async () => {
         try {
-            await createRetweet(userId, retweetText, tweetId);
+            const inappropriate = await checkTweetForInappropriateness(retweetText);
+            await createRetweet(userId, retweetText, tweetId, inappropriate);
             console.log(`Retweeting tweet ${tweetId} with message: ${retweetText}`);
             setRetweetText('');
             setShowInput(false);

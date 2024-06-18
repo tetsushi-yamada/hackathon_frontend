@@ -4,6 +4,7 @@ export interface User {
     user_name: string;
     user_description: string;
     is_private: boolean;
+    is_suspended: boolean;
     email: string;
     created_at: string;
     updated_at: string;

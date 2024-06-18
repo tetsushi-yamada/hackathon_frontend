@@ -3,15 +3,14 @@ import config from '../url/index'
 
 const API_URL = config.apiUrl + '/v1/tweet-picture';
 
-export const getTweetPicture = async (tweet_id: string): Promise<Blob> => {
+export const getTweetPicture = async (tweet_id: string): Promise<Blob | null> => {
     try {
         const response = await axios.get(`${API_URL}/${tweet_id}`, {
             responseType: 'blob',
         });
         return response.data;
     } catch (error) {
-        console.error('Error fetching tweet picture:', error);
-        throw error;
+        return null
     }
 }
 

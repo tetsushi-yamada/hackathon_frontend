@@ -5,9 +5,9 @@ import { User } from '../../../types';
 import { Box, Container, Typography, Switch, FormControlLabel } from '@mui/material';
 import ConfirmationModal from '../../atoms/confirmation/ConfirmationModal';
 
-const SetIsPrivateForm: React.FC = () => {
+const SetIsSuspendedForm: React.FC = () => {
     const { userId } = useUser();
-    const [isPrivate, setIsPrivate] = useState<boolean>(false);
+    const [isSuspended, setIsSuspended] = useState<boolean>(false);
     const [successMessage, setSuccessMessage] = useState<string>('');
     const [modalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -15,7 +15,7 @@ const SetIsPrivateForm: React.FC = () => {
         const fetchUserData = async () => {
             try {
                 const user: User = await fetchUser(userId);
-                setIsPrivate(user.is_private);
+                setIsSuspended(user.is_suspended);
             } catch (error) {
                 console.error('Error fetching user:', error);
             }
@@ -24,16 +24,16 @@ const SetIsPrivateForm: React.FC = () => {
         fetchUserData();
     }, [userId]);
 
-    const handleTogglePrivate = () => {
+    const handleToggleSuspend = () => {
         setModalOpen(true);
     };
 
     const handleConfirmToggle = async () => {
         try {
             const user: User = await fetchUser(userId);
-            await updateUser(userId, user.user_name, user.user_description || '', !isPrivate, user.is_suspended);
-            setSuccessMessage(`Account is now ${!isPrivate ? 'private' : 'public'}`);
-            setIsPrivate(!isPrivate);
+            await updateUser(userId, user.user_name, user.user_description || '', user.is_private, !isSuspended);
+            setSuccessMessage(`Inappropriate tweet is ${!isSuspended ? 'blocked' : 'unblocked'}`);
+            setIsSuspended(!isSuspended);
             setModalOpen(false);
         } catch (error) {
             console.error('Error updating user privacy:', error);
@@ -48,18 +48,18 @@ const SetIsPrivateForm: React.FC = () => {
         <Container>
             <Box my={4}>
                 <Typography variant="h5" gutterBottom>
-                    Set Account Privacy
+                    Set Blocking Inappropriate Tweets
                 </Typography>
                 <Box>
                     <FormControlLabel
                         control={
                             <Switch
-                                checked={isPrivate}
-                                onChange={handleTogglePrivate}
+                                checked={isSuspended}
+                                onChange={handleToggleSuspend}
                                 color="primary"
                             />
                         }
-                        label={isPrivate ? 'Private Account' : 'Public Account'}
+                        label={isSuspended ? 'Block' : 'Unblock'}
                     />
                 </Box>
                 {successMessage && (
@@ -73,10 +73,10 @@ const SetIsPrivateForm: React.FC = () => {
                 onClose={handleCloseModal}
                 onConfirm={handleConfirmToggle}
                 title="Confirm Change"
-                description={`Are you sure you want to switch your account to ${isPrivate ? 'public' : 'private'}?`}
+                description={`Are you sure you want to ${isSuspended ? 'block' : 'unblock'} inappropriate tweets?`}
             />
         </Container>
     );
 };
 
-export default SetIsPrivateForm;
+export default SetIsSuspendedForm;

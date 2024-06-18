@@ -18,7 +18,6 @@ const ProfilePicture: React.FC<ProfilePictureProps> = ({ user_id, radius }) => {
                 const url = URL.createObjectURL(blob);
                 setProfilePicture(url);
             } catch (error) {
-                console.error('Error fetching profile picture:', error);
             }
         };
 
