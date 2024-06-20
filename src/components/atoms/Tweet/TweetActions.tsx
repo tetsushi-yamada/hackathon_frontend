@@ -41,7 +41,6 @@ const TweetActions: React.FC<TweetActionsProps> = ({
     return (
         <div style={{ marginTop: '8px', display: 'flex', gap: '8px' }}>
             <LikeButton tweetId={tweetId} userId={userId} />
-            <ReplyButton tweetId={tweetId} userId={userId} onReplySubmitted={onReplySubmitted} />
             {showRetweetButton &&
                 <RetweetButton tweetId={tweetId} userId={userId} onRetweetSubmitted={onReplySubmitted} />
             }
@@ -59,6 +58,7 @@ const TweetActions: React.FC<TweetActionsProps> = ({
                 <EditIcon />
             </IconButton>
             <TranslateTweetButton tweetId={tweetId} />
+            <ReplyButton tweetId={tweetId} userId={userId} onReplySubmitted={onReplySubmitted} />
             {hasReplies && (
                 <Box display="flex" alignItems="center">
                 <Button onClick={onFetchReplies} size="small">

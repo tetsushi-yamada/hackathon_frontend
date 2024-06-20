@@ -39,6 +39,7 @@ const PostTweet: React.FC<PostTweetProps> = ({ userId, onTweetPosted }) => {
     const [open, setOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -55,7 +56,9 @@ const PostTweet: React.FC<PostTweetProps> = ({ userId, onTweetPosted }) => {
     }, []);
 
     const handleTweetClick = async () => {
-        if (tweetText.trim() === '') return;
+        if (tweetText.trim() === '' || isSubmitting) return;
+
+        setIsSubmitting(true);
 
         try {
             const inappropriate = await checkTweetForInappropriateness(tweetText);
@@ -76,6 +79,8 @@ const PostTweet: React.FC<PostTweetProps> = ({ userId, onTweetPosted }) => {
             }
         } catch (error) {
             console.error('Failed to create tweet:', error);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -163,12 +168,12 @@ const PostTweet: React.FC<PostTweetProps> = ({ userId, onTweetPosted }) => {
                                 <Grid item xs={12}>
                                     <Button
                                         onClick={handleTweetClick}
-                                        disabled={tweetText.trim() === ''}
+                                        disabled={tweetText.trim() === '' || isSubmitting}
                                         fullWidth
                                         variant="contained"
                                         color="primary"
                                     >
-                                        Tweet
+                                        {isSubmitting ? 'Submitting...' : 'Tweet'}
                                     </Button>
                                 </Grid>
                             </Grid>

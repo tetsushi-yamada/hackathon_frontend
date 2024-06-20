@@ -75,7 +75,6 @@ const TranslateTweetButton: React.FC<{ tweetId: string }> = ({ tweetId }) => {
                         >
                             <MenuItem value="ja">Japanese</MenuItem>
                             <MenuItem value="en">English</MenuItem>
-                            <MenuItem value="zh">Chinese</MenuItem>
                             <MenuItem value="ko">Korean</MenuItem>
                         </Select>
                     </FormControl>
