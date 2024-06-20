@@ -4,6 +4,7 @@ import ReplyIcon from '@mui/icons-material/Reply';
 import NormalInput from '../Inputs/NormalInput'; 
 import NormalButton from './NormalButton';
 import { createReplyTweet } from '../../../backend_routes/api/tweets';
+import { checkTweetForInappropriateness } from '../../../backend_routes/api/openapi';
 
 interface ReplyButtonProps {
     tweetId: string;
@@ -21,7 +22,8 @@ const ReplyButton: React.FC<ReplyButtonProps> = ({ tweetId, userId, onReplySubmi
 
     const handleReplySubmit = async () => {
         try {
-            await createReplyTweet(userId, reply, tweetId)
+            const inappropriate = await checkTweetForInappropriateness(reply);
+            await createReplyTweet(userId, reply, tweetId, inappropriate)
             console.log(`Replying to tweet ${tweetId} with message: ${reply}`);
             setReply('');
             setShowInput(false);

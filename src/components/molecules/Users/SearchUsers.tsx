@@ -6,12 +6,11 @@ import ProfilePicture from './ProfilePictureGet';
 import { Link } from 'react-router-dom';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import { Typography,Grid } from '@mui/material';
+import { Typography, Grid } from '@mui/material';
 
 interface SearchProps {
     searchWord: string;
 }
-
 
 export const SearchUserList: React.FC<SearchProps> = ({ searchWord }) => {
     const [users, setUsers] = useState<Users>({ users: [], count: 0 });
@@ -20,19 +19,20 @@ export const SearchUserList: React.FC<SearchProps> = ({ searchWord }) => {
 
     useEffect(() => {
         const fetchUsers = async () => {
+            setLoading(true);
+            setError(''); // Clear previous error
             try {
                 const fetchedUsers = await searchUser(searchWord);
                 if (fetchedUsers.count === 0) {
-                    setError('No users');
+                    setError('No Users Found');
                 } else {
-                    setError('');
+                    setUsers(fetchedUsers);
                 }
-                setUsers(fetchedUsers);
-                setLoading(false);
             } catch (error) {
-                setError('No Users Found');
-                setLoading(false);
+                setError('Failed to fetch users');
                 console.error(error);
+            } finally {
+                setLoading(false);
             }
         };
         fetchUsers();
@@ -40,34 +40,33 @@ export const SearchUserList: React.FC<SearchProps> = ({ searchWord }) => {
 
     if (loading) return <div>Loading...</div>;
 
+    if (error) return <div style={{ color: 'red' }}>{error}</div>;
+
     return (
         <div>
             <h2>Users</h2>
-            {error && <div style={{ color: 'red' }}>{error}</div>}
-            {users.count > 0 &&
-                <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-                    {users.users.map((user) => (
-                        <ListItem key={user.user_id} sx={{ display: 'flex', alignItems: 'center', py: 2 }}>
-                            <Link to={`/userpage/${user.user_id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'flex', width: '100%' }}>
-                                <Grid container spacing={2} alignItems="center">
-                                    <Grid item>
-                                        <ProfilePicture user_id={user.user_id} radius={20} />
-                                    </Grid>
-                                    <Grid item xs>
-                                        <Typography variant="body1" fontWeight="bold">
-                                            {user.user_name}
-                                        </Typography>
-                                        <Typography variant="body2" color="textSecondary">
-                                            @{user.user_id}
-                                        </Typography>
-                                    </Grid>
+            <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                {users.users.map((user) => (
+                    <ListItem key={user.user_id} sx={{ display: 'flex', alignItems: 'center', py: 2 }}>
+                        <Link to={`/userpage/${user.user_id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'flex', width: '100%' }}>
+                            <Grid container spacing={2} alignItems="center">
+                                <Grid item>
+                                    <ProfilePicture user_id={user.user_id} radius={20} />
                                 </Grid>
-                            </Link>
-                            <FollowButton user={user} />
-                        </ListItem>
-                    ))}
-                </List>
-            }
+                                <Grid item xs>
+                                    <Typography variant="body1" fontWeight="bold">
+                                        {user.user_name}
+                                    </Typography>
+                                    <Typography variant="body2" color="textSecondary">
+                                        @{user.user_id}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                        </Link>
+                        <FollowButton user={user} />
+                    </ListItem>
+                ))}
+            </List>
         </div>
     );
 };

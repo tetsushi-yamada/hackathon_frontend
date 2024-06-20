@@ -19,8 +19,11 @@ export const GetGoodsTweetListComponent: React.FC<{ userId: string, refresh: boo
                 const tweetsWithUserName: TweetWithUserName[] = [];
                 const goods = await fetchGoodsByUserId(userId);
                 for (const good of goods.goods) {
-                    const user = await fetchUser(good.user_id);
-                    const tweet = await getTweetsByTweetID(good.tweet_id);
+                    var tweet = await getTweetsByTweetID(good.tweet_id);
+                    if (tweet.parent_id){
+                        tweet = await getTweetsByTweetID(tweet.parent_id);
+                    }
+                    const user = await fetchUser(tweet.user_id);
                     const tweetWithUserName = { ...tweet, user_name: user.user_name };
                     tweetsWithUserName.push(tweetWithUserName);
                 }

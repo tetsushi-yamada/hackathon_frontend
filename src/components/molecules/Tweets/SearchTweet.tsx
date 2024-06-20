@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import List from '@mui/material/List';
 import { TweetWithUserName } from '../../../types';
 import { searchTweets } from '../../../backend_routes/api/tweets';
 import { fetchUser } from '../../../backend_routes/api/users';
 import TweetItem from '../../atoms/Tweet/TweetItem';
 import { updateTweet } from '../../../backend_routes/api/tweets';
 import { deleteTweet } from '../../../backend_routes/api/tweets';
+import List from '@mui/material/List';
 
 interface SearchProps {
     searchWord: string;
@@ -33,7 +33,7 @@ export const SearchTweetList: React.FC<SearchProps> = ({ searchWord, refresh }) 
                 setTweets(tweetsWithUserName);
                 setLoading(false);
             } catch (error) {
-                setError('No Tweets found');
+                setError('Failed to fetch tweets');
                 setLoading(false);
             }
         };
@@ -69,8 +69,7 @@ export const SearchTweetList: React.FC<SearchProps> = ({ searchWord, refresh }) 
         }
     };
 
-    if (loading) return <div>Loading...</div>;
-
+    if (error) return <div style={{ color: 'red' }}>{error}</div>;
     if (loading) return <div>Loading...</div>;
 
     return (

@@ -10,7 +10,6 @@ export const fetchProfilePictureByUserId = async (user_id: string): Promise<Blob
         });
         return response.data;
     } catch (error) {
-        console.error('Error fetching profile picture:', error);
         throw error;
     }
 }

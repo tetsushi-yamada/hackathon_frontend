@@ -8,9 +8,13 @@ import GetTweetListByUserIdComponent from '../molecules/Tweets/GetTweetByUserId'
 import { GetGoodsTweetListComponent } from '../molecules/Tweets/GetTweetByGoods';
 import { useUser } from '../../contexts/UserContext';
 import PostTweet from '../molecules/Tweets/PostTweet';
-import { Grid, Typography, Box, Container, Tabs, Tab } from '@mui/material';
+import { Grid, Typography, Box, Container, Tabs, Tab, IconButton, Paper, Divider } from '@mui/material';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import LockIcon from '@mui/icons-material/Lock';
+import GetFollows from '../molecules/Follow/getFollows';
+import GetFollowers from '../molecules/Follow/getFollowers';
 
-const UserPageComponent: React.FC<{ userID: string }> = ({ userID }) => { 
+const UserPageComponent: React.FC<{ userID: string }> = ({ userID }) => {
     const [user, setUser] = useState<User | null>(null);
     const [selectedTab, setSelectedTab] = useState<number>(0);
     const [refreshTweets, setRefreshTweets] = useState(false);
@@ -20,7 +24,7 @@ const UserPageComponent: React.FC<{ userID: string }> = ({ userID }) => {
         const getUser = async () => {
             const user = await fetchUser(userID);
             setUser(user);
-        }
+        };
         getUser();
     }, [userID]);
 
@@ -34,41 +38,58 @@ const UserPageComponent: React.FC<{ userID: string }> = ({ userID }) => {
 
     return (
         <Container maxWidth="md">
-            <Typography variant="h4" component="h1" gutterBottom>
-                User Page
+            <Typography variant="h4" fontWeight="bold" gutterBottom>
+                Profile
             </Typography>
-                    <Grid container alignItems="center" spacing={2}>
-                        <Grid item>
-                            <ProfilePicture user_id={userID} radius={30} />
-                        </Grid>
-                        <Grid item>
-                            <Typography variant="h6" fontWeight="bold">{user?.user_name}</Typography>
-                            <Typography variant="body2" color="textSecondary">@{user?.user_id}</Typography>
-                        </Grid>
-                        <Grid item>
-                            <Link to="/userpage/settings">
-                                <Settings />
-                            </Link>
-                        </Grid>
+            <Paper elevation={3} sx={{ padding: 2, marginBottom: 4 }}>
+                <Grid container alignItems="center" spacing={2}>
+                    <Grid item>
+                        <ProfilePicture user_id={userID} radius={40} />
                     </Grid>
-                    {user?.user_description ? 
-                        <Box my={4}>
-                            <Typography variant="body1">{user.user_description}</Typography>
+                    <Grid item xs>
+                        <Box display="flex" alignItems="center">
+                            <Typography variant="h6" fontWeight="bold">
+                                {user?.user_name}
+                            </Typography>
+                            {user?.is_private && <LockIcon style={{ marginLeft: 4 }} />}
                         </Box>
-                    : null}
-                    <Tabs value={selectedTab} onChange={handleTabChange} centered>
-                        <Tab label="Tweets" />
-                        <Tab label="Goods" />
-                    </Tabs>
-                    <Box my={4}>
-                        {selectedTab === 0 && <GetTweetListByUserIdComponent userId={userID} refresh={refreshTweets}/>}
-                        {selectedTab === 1 && <GetGoodsTweetListComponent userId={userID} refresh={refreshTweets}/>}
+                        <Typography variant="body2" color="textSecondary">
+                            @{user?.user_id}
+                        </Typography>
+                    </Grid>
+                    <Grid item>
+                        <IconButton component={Link} to="/userpage/follow-requests">
+                            <FavoriteBorderIcon />
+                        </IconButton>
+                        <IconButton component={Link} to="/userpage/settings">
+                            <Settings />
+                        </IconButton>
+                    </Grid>
+                </Grid>
+                {user?.user_description && (
+                    <Box mt={2}>
+                        <Typography variant="body1">{user.user_description}</Typography>
                     </Box>
-                <Box position="fixed" bottom={110} right={16} zIndex={1000}>
-                    <PostTweet userId={userId} onTweetPosted={handleTweetPosted}/>
-                </Box>
+                )}
+            </Paper>
+            <Tabs value={selectedTab} onChange={handleTabChange} variant="fullWidth" centered>
+                <Tab label="Tweets" />
+                <Tab label="Goods" />
+                <Tab label="Follows" />
+                <Tab label="Followers" />
+            </Tabs>
+            <Divider sx={{ marginY: 2 }} />
+            <Box my={4}>
+                {selectedTab === 0 && <GetTweetListByUserIdComponent userId={userID} refresh={refreshTweets} />}
+                {selectedTab === 1 && <GetGoodsTweetListComponent userId={userID} refresh={refreshTweets} />}
+                {selectedTab === 2 && <GetFollows userID={userID} />}
+                {selectedTab === 3 && <GetFollowers userID={userID} />}
+            </Box>
+            <Box position="fixed" bottom={110} right={16} zIndex={1000}>
+                <PostTweet userId={userId} onTweetPosted={handleTweetPosted} />
+            </Box>
         </Container>
     );
-}
+};
 
 export default UserPageComponent;

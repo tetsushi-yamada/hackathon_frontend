@@ -16,12 +16,13 @@ import PassWordResetPage from "./App/(public)/PassWordResetPage/PassWordReset";
 import AuthSelection from "./components/templates/AuthForm/AuthSelection";
 import { ProfileSettingsPage } from "./App/(private)/UserPage/UserSettings/UserProfileSettings/ProfileSettings";
 import OtherUserPageComponent from "./components/organisms/OtherUserPage";
+import { FollowRequestsPage } from "./App/(private)/UserPage/UserFollowRequests/FollowRequests";
 
 const App = () => {
   const auth = getAuth();
   const [loginUser, setLoginUser] = useState<User | null>(null);
 
-  const isWideScreen = useMediaQuery('(min-width:1100px)');
+  const isWideScreen = useMediaQuery('(min-width:1215px)');
   const isSmallScreen = useMediaQuery('(max-width:640px)');
 
   useEffect(() => {
@@ -60,6 +61,7 @@ const App = () => {
                         <Route path="/userpage" element={<UserPage />} />
                         <Route path="/homepage" element={<HomePage />} />
                         <Route path="/search" element={<SearchPage />} />
+                        <Route path="/userpage/follow-requests" element={<FollowRequestsPage />} />
                         <Route path="/userpage/settings" element={<UserSettingsPage />} />
                         <Route path="/userpage/settings/profile" element={<ProfileSettingsPage />} />
                         <Route path="/userpage/:userId" element={<OtherUserPageComponent />} />

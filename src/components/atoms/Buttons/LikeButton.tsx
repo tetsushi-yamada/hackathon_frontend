@@ -28,7 +28,6 @@ const LikeButton: React.FC<LikeButtonProps> = ({ tweetId, userId }) => {
         // 状態をローカルストレージに保存
         localStorage.setItem(`isLiked_${tweetId}_${userId}`, JSON.stringify(isCurrentlyLiked));
       } catch (error) {
-        console.log('No likes:', error);
       }
     };
 
