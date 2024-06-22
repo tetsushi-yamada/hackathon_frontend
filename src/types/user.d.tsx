@@ -2,6 +2,7 @@
 export interface User {
     user_id: string;
     user_name: string;
+    age: number;
     user_description: string;
     is_private: boolean;
     is_suspended: boolean;

@@ -28,7 +28,7 @@ const LogoutForm: React.FC = () => {
 
   return (
     <div>
-      <NormalButton onClick={() => setModalOpen(true)} color="red">ログアウト</NormalButton>
+      <NormalButton onClick={() => setModalOpen(true)} color="red">LOG OUT</NormalButton>
       <ConfirmationModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}

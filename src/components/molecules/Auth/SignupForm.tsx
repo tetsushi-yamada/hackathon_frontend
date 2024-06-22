@@ -4,7 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import fireAuth from '../../../config/index';
-import { postUser } from '../../../backend_routes/api/users';
+import { postUser, updateUser } from '../../../backend_routes/api/users';
 import { useUser } from '../../../contexts/UserContext';
 import { Link } from 'react-router-dom';
 import { Container, TextField, Button, Typography, Box } from '@mui/material';
@@ -14,7 +14,8 @@ import { ArrowBack } from '../../atoms/Icons/ArrowBackIcon';
 const schema = yup.object().shape({
   username: yup.string().required('Username is required'),
   email: yup.string().email('Invalid email format').required('Email is required'),
-  password: yup.string().min(6, 'Password must be at least 6 characters long').required('Password is required')
+  password: yup.string().min(6, 'Password must be at least 6 characters long').required('Password is required'),
+  age: yup.number().required('Age is required').min(0, 'Age must be at least 0').integer('Age must be an integer')
 });
 
 const SignupForm: React.FC = () => {
@@ -24,8 +25,8 @@ const SignupForm: React.FC = () => {
   });
   const [error, setError] = useState<string>('');
 
-  const onSubmit = async (data: { email: string, password: string, username: string }) => {
-    const { email, password, username } = data;
+  const onSubmit = async (data: { email: string, password: string, username: string, age: number }) => {
+    const { email, password, username, age } = data;
     try {
       const userCredential = await createUserWithEmailAndPassword(fireAuth, email, password);
       if (userCredential.user) {
@@ -33,7 +34,10 @@ const SignupForm: React.FC = () => {
           displayName: username
         });
         const newUserId = userCredential.user.uid;
-        await postUser(newUserId, username);
+        await postUser(newUserId, username, age);  // ageをpostUserに渡す
+        if (age < 18){
+          await updateUser(newUserId, username, age, '', true, true);
+        }
         setUserId(newUserId);
         console.log('Created user ID:', newUserId);
       }
@@ -108,6 +112,25 @@ const SignupForm: React.FC = () => {
                 autoComplete="current-password"
                 error={Boolean(errors.password)}
                 helperText={errors.password?.message}
+              />
+            )}
+          />
+          <Controller
+            name="age"
+            control={control}
+            defaultValue={0}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                margin="normal"
+                required
+                fullWidth
+                id="age"
+                label="Age"
+                type="number"
+                autoComplete="age"
+                error={Boolean(errors.age)}
+                helperText={errors.age?.message}
               />
             )}
           />
