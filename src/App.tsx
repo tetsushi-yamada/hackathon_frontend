@@ -17,6 +17,7 @@ import AuthSelection from "./components/templates/AuthForm/AuthSelection";
 import { ProfileSettingsPage } from "./App/(private)/UserPage/UserSettings/UserProfileSettings/ProfileSettings";
 import OtherUserPageComponent from "./components/organisms/OtherUserPage";
 import { FollowRequestsPage } from "./App/(private)/UserPage/UserFollowRequests/FollowRequests";
+import ShortcutsProvider from "./components/atoms/Shortcuts/shortcut";
 
 const App = () => {
   const auth = getAuth();
@@ -51,32 +52,34 @@ const App = () => {
         {loginUser && (
           <>
             <Router>
-              <Grid container spacing={2} style={{ marginTop: 16 }}>
-                  <Grid item xs={isSmallScreen ? 12 : 2}>
-                    <Navbar />
-                  </Grid>
-                  <Grid item xs={isWideScreen ? 6 : isSmallScreen ? 12 : 10} style={{ marginTop: isSmallScreen ? '60px' : '0' }}>
-                    <Paper style={{ padding: 16, height: '100%' }}>
-                      <Routes>
-                        <Route path="/userpage" element={<UserPage />} />
-                        <Route path="/homepage" element={<HomePage />} />
-                        <Route path="/search" element={<SearchPage />} />
-                        <Route path="/userpage/follow-requests" element={<FollowRequestsPage />} />
-                        <Route path="/userpage/settings" element={<UserSettingsPage />} />
-                        <Route path="/userpage/settings/profile" element={<ProfileSettingsPage />} />
-                        <Route path="/userpage/:userId" element={<OtherUserPageComponent />} />
-                        <Route path="*" element={<Navigate to="/homepage" />} /> 
-                      </Routes>
-                    </Paper>
-                  </Grid>
-                  {isWideScreen && (
-                    <Grid item xs={4}>
+              <ShortcutsProvider>
+                <Grid container spacing={2} style={{ marginTop: 16 }}>
+                    <Grid item xs={isSmallScreen ? 12 : 2}>
+                      <Navbar />
+                    </Grid>
+                    <Grid item xs={isWideScreen ? 6 : isSmallScreen ? 12 : 10} style={{ marginTop: isSmallScreen ? '60px' : '0' }}>
                       <Paper style={{ padding: 16, height: '100%' }}>
-                        <SearchAppBar />
+                        <Routes>
+                          <Route path="/userpage" element={<UserPage />} />
+                          <Route path="/homepage" element={<HomePage />} />
+                          <Route path="/search" element={<SearchPage />} />
+                          <Route path="/userpage/follow-requests" element={<FollowRequestsPage />} />
+                          <Route path="/userpage/settings" element={<UserSettingsPage />} />
+                          <Route path="/userpage/settings/profile" element={<ProfileSettingsPage />} />
+                          <Route path="/userpage/:userId" element={<OtherUserPageComponent />} />
+                          <Route path="*" element={<Navigate to="/homepage" />} /> 
+                        </Routes>
                       </Paper>
                     </Grid>
-                  )}
-              </Grid>
+                    {isWideScreen && (
+                      <Grid item xs={4}>
+                        <Paper style={{ padding: 16, height: '100%' }}>
+                          <SearchAppBar />
+                        </Paper>
+                      </Grid>
+                    )}
+                </Grid>
+              </ShortcutsProvider>
             </Router>
           </>
         )}
