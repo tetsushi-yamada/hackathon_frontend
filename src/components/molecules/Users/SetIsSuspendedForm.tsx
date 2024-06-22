@@ -7,6 +7,7 @@ import ConfirmationModal from '../../atoms/confirmation/ConfirmationModal';
 
 const SetIsSuspendedForm: React.FC = () => {
     const { userId } = useUser();
+    const [user, setUser] = useState<User | null>(null);
     const [isSuspended, setIsSuspended] = useState<boolean>(false);
     const [successMessage, setSuccessMessage] = useState<string>('');
     const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -14,8 +15,13 @@ const SetIsSuspendedForm: React.FC = () => {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const user: User = await fetchUser(userId);
-                setIsSuspended(user.is_suspended);
+                const fetchedUser: User = await fetchUser(userId);
+                setUser(fetchedUser);
+                setIsSuspended(fetchedUser.is_suspended);
+                if (fetchedUser.age <= 18) {
+                    await updateUser(userId, fetchedUser.user_name, fetchedUser.age, fetchedUser.user_description || '', fetchedUser.is_private, true);
+                    setIsSuspended(true);
+                }
             } catch (error) {
                 console.error('Error fetching user:', error);
             }
@@ -29,14 +35,15 @@ const SetIsSuspendedForm: React.FC = () => {
     };
 
     const handleConfirmToggle = async () => {
-        try {
-            const user: User = await fetchUser(userId);
-            await updateUser(userId, user.user_name, user.user_description || '', user.is_private, !isSuspended);
-            setSuccessMessage(`Inappropriate tweet is ${!isSuspended ? 'blocked' : 'unblocked'}`);
-            setIsSuspended(!isSuspended);
-            setModalOpen(false);
-        } catch (error) {
-            console.error('Error updating user privacy:', error);
+        if (user) {
+            try {
+                await updateUser(userId, user.user_name, user.age, user.user_description || '', user.is_private, !isSuspended);
+                setSuccessMessage(`Inappropriate tweet is ${!isSuspended ? 'blocked' : 'unblocked'}`);
+                setIsSuspended(!isSuspended);
+                setModalOpen(false);
+            } catch (error) {
+                console.error('Error updating user privacy:', error);
+            }
         }
     };
 
@@ -44,24 +51,34 @@ const SetIsSuspendedForm: React.FC = () => {
         setModalOpen(false);
     };
 
+    if (!user) {
+        return <Typography>Loading...</Typography>;
+    }
+
     return (
         <Container>
             <Box my={4}>
                 <Typography variant="h5" gutterBottom>
                     Set Blocking Inappropriate Tweets
                 </Typography>
-                <Box>
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                checked={isSuspended}
-                                onChange={handleToggleSuspend}
-                                color="primary"
-                            />
-                        }
-                        label={isSuspended ? 'Block' : 'Unblock'}
-                    />
-                </Box>
+                {user.age <= 18 ? (
+                    <Typography variant="body1" color="error.main" sx={{ mt: 2 }}>
+                        You are under 18 years old. Blocking inappropriate tweets is automatically enabled.
+                    </Typography>
+                ) : (
+                    <Box>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={isSuspended}
+                                    onChange={handleToggleSuspend}
+                                    color="primary"
+                                />
+                            }
+                            label={isSuspended ? 'Block' : 'Unblock'}
+                        />
+                    </Box>
+                )}
                 {successMessage && (
                     <Typography variant="body1" color="success.main" sx={{ mt: 2 }}>
                         {successMessage}

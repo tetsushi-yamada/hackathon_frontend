@@ -15,9 +15,9 @@ export const fetchUser = async (user_id: string): Promise<User> => {
 }
 };
 
-export const postUser = async (user_id:string, user_name: string): Promise<string> => {
+export const postUser = async (user_id:string, user_name: string, age: number): Promise<string> => {
     try {
-        const response = await axios.post(API_URL, { user_id:user_id, user_name: user_name });
+        const response = await axios.post(API_URL, { user_id:user_id, user_name: user_name, age: age});
         if (response.status === 200 || response.status === 201) { 
             return response.data; 
         } else {
@@ -29,9 +29,9 @@ export const postUser = async (user_id:string, user_name: string): Promise<strin
     }
 };
 
-export const updateUser = async (user_id: string, user_name: string, user_description: string, is_private: boolean, is_suspended: boolean): Promise<void> => {
+export const updateUser = async (user_id: string, user_name: string, age:number, user_description: string, is_private: boolean, is_suspended: boolean): Promise<void> => {
     try {
-        await axios.put(`${API_URL}/${user_id}`, { user_name: user_name, user_description: user_description, is_private: is_private, is_suspended: is_suspended});
+        await axios.put(`${API_URL}/${user_id}`, { user_name: user_name, age: age, user_description: user_description, is_private: is_private, is_suspended: is_suspended});
     } catch (error) {
         console.error('Error updating user:', error);
         throw error;

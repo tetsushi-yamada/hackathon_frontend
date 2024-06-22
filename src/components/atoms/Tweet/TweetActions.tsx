@@ -36,10 +36,9 @@ const TweetActions: React.FC<TweetActionsProps> = ({
     showRetweetButton
 }) => {
     const [modalOpen, setModalOpen] = React.useState(false);
-    
 
     return (
-        <div style={{ marginTop: '8px', display: 'flex', gap: '8px' }}>
+        <div style={{ marginTop: '8px', display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
             <LikeButton tweetId={tweetId} userId={userId} />
             {showRetweetButton &&
                 <RetweetButton tweetId={tweetId} userId={userId} onRetweetSubmitted={onReplySubmitted} />
@@ -58,7 +57,9 @@ const TweetActions: React.FC<TweetActionsProps> = ({
                 <EditIcon />
             </IconButton>
             <TranslateTweetButton tweetId={tweetId} />
-            <ReplyButton tweetId={tweetId} userId={userId} onReplySubmitted={onReplySubmitted} />
+            <Box sx={{ flexGrow: 1, minWidth: '150px' }}>
+                <ReplyButton tweetId={tweetId} userId={userId} onReplySubmitted={onReplySubmitted} />
+            </Box>
             {hasReplies && (
                 <Box display="flex" alignItems="center">
                 <Button onClick={onFetchReplies} size="small">
