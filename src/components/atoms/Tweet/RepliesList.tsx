@@ -59,8 +59,8 @@ const RepliesList: React.FC<RepliesListProps> = ({
                                     <ProfileHeader userId={reply.user_id} />
                                     <div style={{width: '100%'}}>
                                         <div style={{padding: '16px', backgroundColor: '#ffcccc', borderRadius: '8px', width: '100%'}}>
-                                            <p>このツイートは不適切な内容を含んでいる可能性があります。</p>
-                                            <p>このツイートは非表示にされました。</p>
+                                            <p>This tweet may contain inappropriate content.</p>
+                                            <p>This tweet has been hidden</p>
                                         </div>
                                     </div>
                                 </Box>
