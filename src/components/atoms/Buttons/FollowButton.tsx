@@ -36,7 +36,7 @@ const FollowButton: React.FC<OtherUserPageProps> = ({ user }) => {
                 setFollowedOrNot(followedResult);
             }
         } catch (error) {
-            console.error('フォローステータスの確認に失敗しました', error);
+            console.error('failed to check Follow Status', error);
         }
     }, [userId, user.user_id, user.is_private]);
 

@@ -1,0 +1,25 @@
+@keyframes fly {
+    0% {
+      bottom: 60px;
+      right: 16px;
+      transform: translateX(0) translateY(0) scale(1);
+    }
+    100% {
+      bottom: 100%;
+      right: 100%;
+      transform: translateX(-100%) translateY(-100%) scale(0);
+    }
+  }
+  
+  .bird {
+    position: fixed;
+    bottom: 60px;
+    right: 16px;
+    width: 56px;
+    height: 56px;
+    z-index: 1001;
+    pointer-events: none;
+    transform-origin: bottom right;
+    animation: fly 2s forwards;
+  }
+  

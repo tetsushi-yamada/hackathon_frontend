@@ -13,6 +13,7 @@ import { User } from '../../../types';
 import NormalInput from '../Inputs/NormalInput';
 import NormalButton from '../Buttons/NormalButton';
 import { Box, ListItem } from '@mui/material';
+import { checkBlock } from '../../../backend_routes/api/block';
 
 interface TweetItemProps {
     tweet: TweetWithUserName;
@@ -44,10 +45,11 @@ const TweetItem: React.FC<TweetItemProps> = ({
     const [editReplyId, setEditReplyId] = useState<string | null>(null);
     const [editReplyText, setEditReplyText] = useState<string>('');
     const [originalTweet, setOriginalTweet] = useState<TweetWithUserNameAndAppropriate | null>(null);
-    const [replyCount , setReplyCount] = useState<number>(0);
+    const [replyCount, setReplyCount] = useState<number>(0);
     const [user, setUser] = useState<User | null>(null);
     const [isInappropriate, setIsInappropriate] = useState<boolean>(false);
     const [editingUser, setEditingUser] = useState<User | null>(null);
+    const [isBlocked, setIsBlocked] = useState<boolean>(false);
 
     useEffect(() => {
         const getUser = async () => {
@@ -63,7 +65,7 @@ const TweetItem: React.FC<TweetItemProps> = ({
             setEditingUser(user);
         };
         getUser();
-    },[userId]);
+    }, [userId]);
 
     const checkFollowStatus = useCallback(async () => {
         if (userId && tweet.user_id) {
@@ -100,7 +102,7 @@ const TweetItem: React.FC<TweetItemProps> = ({
                         } else {
                             return null;
                         }
-                    }else{
+                    } else {
                         return {
                             ...reply,
                             user_name: user.user_name,
@@ -114,7 +116,7 @@ const TweetItem: React.FC<TweetItemProps> = ({
                     setHasReplies(true);
                     setReplyCount(nonNullReplies.length);
                 } else {
-                    setHasReplies(false)
+                    setHasReplies(false);
                     setReplyButtonClicked(false);
                     setReplies([]);
                 }
@@ -156,7 +158,7 @@ const TweetItem: React.FC<TweetItemProps> = ({
     const handleReplyEditClick = (tweet_id: string, tweet_text: string) => {
         setEditReplyId(tweet_id);
         setEditReplyText(tweet_text);
-    }
+    };
 
     const handleReplySaveClick = useCallback(async () => {
         if (!editReplyId) return;
@@ -167,7 +169,7 @@ const TweetItem: React.FC<TweetItemProps> = ({
 
     useEffect(() => {
         checkReplies();
-    },[]);
+    }, []);
 
     useEffect(() => {
         const loadTweetPicture = async () => {
@@ -220,12 +222,23 @@ const TweetItem: React.FC<TweetItemProps> = ({
             } catch (error) {
                 console.error('Failed to check inappropriateness:', error);
             }
-        }
+        };
         checkInappropriateness();
-    },[tweet])
+    }, [tweet]);
 
-    if (userId !== tweet.user_id && user?.is_private && !isFollowing) {
-        return null; // フォローしていない場合は何も表示しない
+    useEffect(() => {
+        const checkBlockStatus = async () => {
+            if (userId && tweet.user_id) {
+                const result = await checkBlock(userId, tweet.user_id);
+                const reverseResult = await checkBlock(tweet.user_id, userId);
+                setIsBlocked(result || reverseResult);
+            }
+        };
+        checkBlockStatus();
+    }, [userId, tweet.user_id]);
+
+    if (isBlocked || (userId !== tweet.user_id && user?.is_private && !isFollowing)) {
+        return null; // ブロックされているか、フォローしていない場合は何も表示しない
     }
 
     return (
@@ -245,7 +258,7 @@ const TweetItem: React.FC<TweetItemProps> = ({
                 <div style={{ width: '100%' }}>
                     <ProfileHeader userId={tweet.user_id} />
                     {editingUser?.is_suspended && isInappropriate ? (
-                        <div style={{padding: '16px', backgroundColor: '#ffcccc', borderRadius: '8px', width: '100%'}}>
+                        <div style={{ padding: '16px', backgroundColor: '#ffcccc', borderRadius: '8px', width: '100%' }}>
                             <p>This tweet may contain inappropriate content.</p>
                             <p>This tweet has been hidden.</p>
                         </div>
@@ -256,7 +269,7 @@ const TweetItem: React.FC<TweetItemProps> = ({
                         editingUser?.is_suspended && originalTweet.is_inappropriate ? (
                             <div style={{ width: '100%' }}>
                                 <ProfileHeader userId={originalTweet.user_id} />
-                                <div style={{padding: '16px', backgroundColor: '#ffcccc', borderRadius: '8px', width: '100%'}}>
+                                <div style={{ padding: '16px', backgroundColor: '#ffcccc', borderRadius: '8px', width: '100%' }}>
                                     <p>This tweet may contain inappropriate content.</p>
                                     <p>This tweet has been hidden.</p>
                                 </div>
