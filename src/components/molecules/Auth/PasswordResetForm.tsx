@@ -12,10 +12,10 @@ const ResetPasswordForm: React.FC = () => {
     event.preventDefault();
     try {
       await sendPasswordResetEmail(fireAuth, email);
-      setMessage('パスワードリセットのリンクをメールで送信しました。');
+      setMessage('Send password reset link to your email.');
       setError('');
     } catch (err: any) {
-      setError('パスワードリセットのリンクを送信できませんでした。');
+      setError('Failed to send password reset email. Please try again.');
       setMessage('');
       console.error('Password reset error', err);
     }
@@ -24,14 +24,14 @@ const ResetPasswordForm: React.FC = () => {
   return (
     <Container maxWidth="xs">
       <Box sx={{ mt: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Typography component="h1" variant="h5">パスワードリセット</Typography>
+        <Typography component="h1" variant="h5">Password Reset</Typography>
         <Box component="form" onSubmit={handleResetPassword} sx={{ mt: 1 }}>
           <TextField
             margin="normal"
             required
             fullWidth
             id="email"
-            label="メールアドレスを入力"
+            label="Email Address"
             name="email"
             autoComplete="email"
             autoFocus

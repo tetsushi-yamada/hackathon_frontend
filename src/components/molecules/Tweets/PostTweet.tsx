@@ -6,6 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import { styled } from '@mui/material/styles';
 import { checkTweetForInappropriateness } from '../../../backend_routes/api/openapi';
+import './PostTweet.css'; // 追加
 
 interface PostTweetProps {
     userId: string;
@@ -40,6 +41,7 @@ const PostTweet: React.FC<PostTweetProps> = ({ userId, onTweetPosted }) => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showBird, setShowBird] = useState(false);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -77,6 +79,12 @@ const PostTweet: React.FC<PostTweetProps> = ({ userId, onTweetPosted }) => {
             if (onTweetPosted && typeof onTweetPosted === 'function') {
                 onTweetPosted();
             }
+
+            // 鳥のアニメーションをトリガー
+            setShowBird(true);
+            setTimeout(() => {
+                setShowBird(false);
+            }, 2000); // アニメーションの持続時間と一致させる
         } catch (error) {
             console.error('Failed to create tweet:', error);
         } finally {
@@ -181,6 +189,7 @@ const PostTweet: React.FC<PostTweetProps> = ({ userId, onTweetPosted }) => {
                     </DialogContent>
                 </Dialog>
             </Container>
+            {showBird && <img src="/bird.png" alt="Bird" className="bird" />} {/* 鳥の画像 */}
         </div>
     );
 };

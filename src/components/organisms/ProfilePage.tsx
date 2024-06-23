@@ -74,7 +74,7 @@ const UserPageComponent: React.FC<{ userID: string }> = ({ userID }) => {
             </Paper>
             <Tabs value={selectedTab} onChange={handleTabChange} variant="fullWidth" centered>
                 <Tab label="Tweets" />
-                <Tab label="Goods" />
+                <Tab label="Likes" />
                 <Tab label="Follows" />
                 <Tab label="Followers" />
             </Tabs>

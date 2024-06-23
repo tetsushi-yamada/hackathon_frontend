@@ -23,6 +23,7 @@ const OtherUserPageComponent: React.FC = () => {
     const [refreshTweets, setRefreshTweets] = useState(false);
     const [followOrNot, setFollowOrNot] = useState<boolean>(false);
     const [blockOrNot, setBlockOrNot] = useState<boolean>(false);
+    const [reverseBlockOrNot, setReverseBlockOrNot] = useState<boolean>(false);
     const { userId } = useUser();
 
     useEffect(() => {
@@ -47,6 +48,20 @@ const OtherUserPageComponent: React.FC = () => {
             }
         };
         checkBlockStatus();
+    }, [userId, userID]);
+
+    useEffect(() => {
+        const checkReverseBlockStatus = async () => {
+            try {
+                if (userId && userID) {
+                    const result = await checkBlock(userID, userId);
+                    setReverseBlockOrNot(result);
+                }
+            } catch (error) {
+                console.error('Failed to check reverse block status', error);
+            }
+        };
+        checkReverseBlockStatus();
     }, [userId, userID]);
 
     useEffect(() => {
@@ -118,6 +133,46 @@ const OtherUserPageComponent: React.FC = () => {
                         </Box>
                     )}
                     <Typography variant="h4">You have blocked this user.</Typography>
+                </Box>
+            </Container>
+        );
+    }
+
+    if (reverseBlockOrNot) {
+        return (
+            <Container maxWidth="md">
+                <Box my={4}>
+                    <Typography variant="h4" component="h1" gutterBottom>
+                        User Page
+                    </Typography>
+                    <Grid container alignItems="center" spacing={2}>
+                        <Grid item>
+                            <ProfilePicture user_id={userID} radius={30} />
+                        </Grid>
+                        <Grid item xs>
+                            <Box display="flex" alignItems="center">
+                                <Typography variant="h6" fontWeight="bold">
+                                    {user?.user_name}
+                                </Typography>
+                                {user?.is_private && <LockIcon style={{ marginLeft: 4 }} />}
+                            </Box>
+                            <Typography variant="body2" color="textSecondary">
+                                @{user?.user_id}
+                            </Typography>
+                        </Grid>
+                        <Grid item>
+                            {user ? <FollowButton user={user} /> : null}
+                        </Grid>
+                        <Grid item>
+                            {user && userId !== userID ? <BlockButton userID={user.user_id} /> : null}
+                        </Grid>
+                    </Grid>
+                    {user?.user_description && (
+                        <Box mt={2}>
+                            <Typography variant="body1">{user.user_description}</Typography>
+                        </Box>
+                    )}
+                    <Typography variant="h4">This user has blocked you.</Typography>
                 </Box>
             </Container>
         );

@@ -29,16 +29,16 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userId }) => {
                         <ProfilePicture user_id={userId} radius={20} />
                     </Grid>
                     <Grid item xs>
-                            <Box display="flex" alignItems="center">
-                                <Typography variant="h6" fontWeight="bold">
-                                    {user?.user_name}
-                                </Typography>
-                                {user?.is_private && <LockIcon style={{ marginLeft: 4 }} />}
-                            </Box>
-                            <Typography variant="body2" color="textSecondary">
-                                @{user?.user_id}
+                        <Box display="flex" alignItems="center">
+                            <Typography variant="h6" fontWeight="bold">
+                                {user?.user_name}
                             </Typography>
-                        </Grid>
+                            {user?.is_private && <LockIcon style={{ marginLeft: 4 }} />}
+                        </Box>
+                        <Typography variant="body2" color="textSecondary">
+                            @{user?.user_id}
+                        </Typography>
+                    </Grid>
                 </Grid>
             </Box>
         </Link>

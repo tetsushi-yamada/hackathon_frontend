@@ -188,7 +188,7 @@ const ProfilePictureUploadForm: React.FC = () => {
                                     {croppedBlob && (
                                         <>
                                             <Box my={2} display="flex" justifyContent="center">
-                                                <img src={profileImg} alt="トリミングされた画像" style={{ width: "150px", height: "150px", borderRadius: "50%" }} />
+                                                <img src={profileImg} alt="trimmed" style={{ width: "150px", height: "150px", borderRadius: "50%" }} />
                                             </Box>
                                             <Box display="flex" justifyContent="center">
                                                 <Button onClick={handleUpload} variant="contained" color="primary">

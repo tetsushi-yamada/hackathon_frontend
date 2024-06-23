@@ -49,8 +49,20 @@ const SignupForm: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="xs">
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+    <Container 
+    sx={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100vh',
+      background: 'linear-gradient(to bottom, #2193b0, #6dd5ed)', // 青色のグラデーション
+      padding: 2,
+      boxShadow: 3,
+      borderRadius: 2,
+  }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2
+      }}>
         <Link to="/auth/signin">
           <ArrowBack />
         </Link>

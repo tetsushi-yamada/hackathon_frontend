@@ -4,8 +4,20 @@ import { Link as RouterLink } from 'react-router-dom';
 
 const AuthSelection: React.FC = () => {
     return (
-        <Container maxWidth="xs" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
-            <Box sx={{ textAlign: 'center' }}>
+        <Container
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '100vh',
+                background: 'linear-gradient(to bottom, #2193b0, #6dd5ed)', // 青色のグラデーション
+                padding: 2,
+                boxShadow: 3,
+                borderRadius: 2,
+            }}
+        >
+            <Box sx={{ textAlign: 'center', backgroundColor: 'rgba(255, 255, 255, 0.8)', padding: 2, borderRadius: 2 }}>
                 <Typography variant="h4" gutterBottom>
                     Welcome
                 </Typography>
@@ -21,7 +33,7 @@ const AuthSelection: React.FC = () => {
                         fullWidth
                         sx={{ mb: 2 }}
                     >
-                    Sign In
+                        Sign In
                     </Button>
                     <Button
                         component={RouterLink}

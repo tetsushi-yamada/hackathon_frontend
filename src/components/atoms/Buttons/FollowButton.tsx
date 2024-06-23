@@ -36,7 +36,7 @@ const FollowButton: React.FC<OtherUserPageProps> = ({ user }) => {
                 setFollowedOrNot(followedResult);
             }
         } catch (error) {
-            console.error('フォローステータスの確認に失敗しました', error);
+            console.error('failed to check Follow Status', error);
         }
     }, [userId, user.user_id, user.is_private]);
 
@@ -57,7 +57,7 @@ const FollowButton: React.FC<OtherUserPageProps> = ({ user }) => {
                 navigate(`/userpage/settings/profile`);
             }
         } catch (error) {
-            console.error('フォロー操作に失敗しました', error);
+            console.error('Failed to handle follow', error);
         }
     };
 
@@ -67,7 +67,7 @@ const FollowButton: React.FC<OtherUserPageProps> = ({ user }) => {
             setModalOpen(false);
             await checkFollowStatus(); // ステータスを確認
         } catch (error) {
-            console.error('フォローリクエストの送信に失敗しました', error);
+            console.error('failed to send follow request', error);
         }
     };
 
